@@ -22,7 +22,13 @@ Conseilux Test is a comprehensive English language assessment platform that prov
 - **Styling**: Custom CSS with responsive design
 - **Fonts**: Google Fonts (Inter)
 
+## Live Demo
+
+🌐 **[Visit Conseilux Test](https://conseilux-test.onrender.com)** (Hosted on Render)
+
 ## Installation
+
+### Local Development
 
 1. Clone the repository:
 ```bash
@@ -39,7 +45,7 @@ source .venv/bin/activate  # Linux/Mac
 
 3. Install dependencies:
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 
 4. Run the application:
@@ -51,6 +57,17 @@ python app.py
 ```
 http://localhost:5000
 ```
+
+### Deploy to Render
+
+1. Push your code to GitHub
+2. Go to [Render Dashboard](https://dashboard.render.com/)
+3. Click "New +" and select "Web Service"
+4. Connect your GitHub repository
+5. Render will automatically detect the `render.yaml` configuration
+6. Click "Create Web Service"
+
+Your app will be live at: `https://your-app-name.onrender.com`
 
 ## Project Structure
 
