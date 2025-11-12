@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block body_class %}results-page{% endblock %}
+{% block content %}
+<section class="results">
+  <div class="container">
+    <div class="card results-card" id="results-card">
+      <div class="results-header">
+        <h2>Your Results</h2>
+        <p class="results-subtitle">Congratulations on completing the test!</p>
+      </div>
+      <div class="results-stats">
+        <div class="result-stat">
+          <div class="stat-label">Score</div>
+          <div id="score-line" class="stat-value">0 / 90</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">CEFR Level</div>
+          <div id="cefr-line" class="stat-value">—</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">Time</div>
+          <div id="time-line" class="stat-value">00:00:00</div>
+        </div>
+      </div>
+      <div class="result-actions">
+        <a class="btn primary" href="{{ url_for('test') }}" id="restart-btn">Retake the Test</a>
+        <button class="btn secondary" id="pdf-btn">Download Certificate</button>
+        <button class="btn secondary" id="share-btn">Share Results</button>
+        <button class="btn secondary" id="print-btn">Print</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/questions.js') }}"></script>
+<script src="{{ url_for('static', filename='js/results.js') }}"></script>
+{% endblock %}

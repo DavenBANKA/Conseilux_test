@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% block body_class %}home-page{% endblock %}
+{% block main_class %}{% endblock %}
+{% block content %}
+<section class="hero hero-grid">
+  <div class="container">
+    <div class="hero-content-grid">
+      <div class="hero-text">
+        <div class="hero-badge">🏆 #1 English Assessment Platform</div>
+        <h2>Professional English Test - Free & Accurate</h2>
+        <p>Get an instant assessment of your CEFR level with the Conseilux Test. Reliable, fast, and accessible on all
+          your devices. Join over 50,000 professionals worldwide who trust our platform.</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">50,000+</div>
+            <div class="stat-label">Tests Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Accuracy Rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">15min</div>
+            <div class="stat-label">Average Time</div>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary hero-cta" href="{{ url_for('test') }}">Take the test now</a>
+          <a class="btn secondary hero-cta-alt" href="#features">Learn More</a>
+        </div>
+        <div class="hero-trust">
+          <p>✓ No registration required • ✓ Instant results • ✓ Free certificate</p>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="{{ url_for('images', filename='WhatsApp Image 2025-11-12 à 13.16.30_18c5995d.jpg') }}"
+          alt="English Test" class="hero-image" />
+        <div class="hero-floating-badge badge-1">✓ CEFR Certified</div>
+        <div class="hero-floating-badge badge-2">⚡ Instant Results</div>
+        <div class="hero-floating-badge badge-3">🌍 Global Standard</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-section">
+  <div class="container">
+    <div class="trust-content">
+      <div class="trust-item">
+        <div class="trust-icon">🔒</div>
+        <h3>Secure & Confidential</h3>
+        <p>Your data is protected with enterprise-grade security</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">✓</div>
+        <h3>CEFR Certified</h3>
+        <p>Aligned with international language standards</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Get your assessment immediately after completion</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🌍</div>
+        <h3>Globally Recognized</h3>
+        <p>Accepted by employers and institutions worldwide</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Conseilux Test?</h2>
+      <p>A comprehensive assessment designed for professionals seeking accurate English evaluation</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <h3>Fast & Efficient</h3>
+        <p>Complete the test in under 30 minutes and get instant results with your CEFR level. No waiting, no delays.
+        </p>
+        <ul class="feature-list">
+          <li>90 carefully selected questions</li>
+          <li>Adaptive difficulty system</li>
+          <li>Real-time scoring</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+        </div>
+        <h3>Accurate Assessment</h3>
+        <p>Our test is aligned with CEFR standards, ensuring a precise evaluation of your English skills.</p>
+        <ul class="feature-list">
+          <li>CEFR-aligned questions</li>
+          <li>Validated by experts</li>
+          <li>98% accuracy rate</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </div>
+        <h3>Any Device</h3>
+        <p>Take the test on your computer, tablet, or smartphone - wherever you are, whenever you want.</p>
+        <ul class="feature-list">
+          <li>Fully responsive design</li>
+          <li>Works offline</li>
+          <li>Cross-platform compatible</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <h3>Detailed Results</h3>
+        <p>Receive a comprehensive breakdown of your performance and downloadable certificate.</p>
+        <ul class="feature-list">
+          <li>Skill-by-skill analysis</li>
+          <li>PDF certificate</li>
+          <li>Improvement suggestions</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <h3>Multiple Skills</h3>
+        <p>Test your grammar, vocabulary, reading comprehension, and language usage all in one place.</p>
+        <ul class="feature-list">
+          <li>Grammar & syntax</li>
+          <li>Vocabulary range</li>
+          <li>Reading comprehension</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <h3>For Everyone</h3>
+        <p>Whether you're a student, professional, or job seeker, our test adapts to your level.</p>
+        <ul class="feature-list">
+          <li>All proficiency levels</li>
+          <li>Career-focused content</li>
+          <li>Academic & business English</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="promo-section promo-fullscreen">
+  <div class="promo-container">
+    <div class="promo-badge">Official Partner</div>
+    <div class="promo-content">
+      <div class="promo-text">
+        <h2>Discover Conseilux Training</h2>
+        <p class="promo-subtitle">Your Gateway to Professional English Excellence</p>
+        <p>Visit our official website for comprehensive English training programs, professional development courses, and
+          personalized learning solutions tailored to your career goals. Join over 10,000 professionals who have
+          transformed their English skills with Conseilux Training.</p>
+
+        <div class="promo-stats-mini">
+          <div class="promo-stat-mini">
+            <div class="promo-stat-number">10,000+</div>
+            <div class="promo-stat-label">Students Trained</div>
+          </div>
+          <div class="promo-stat-mini">
+            <div class="promo-stat-number">500+</div>
+            <div class="promo-stat-label">Companies</div>
+          </div>
+          <div class="promo-stat-mini">
+            <div class="promo-stat-number">95%</div>
+            <div class="promo-stat-label">Success Rate</div>
+          </div>
+        </div>
+
+        <div class="promo-features">
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>Expert-led live sessions with certified instructors</span>
+          </div>
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>Corporate training programs for teams of all sizes</span>
+          </div>
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>Personalized learning paths based on your goals</span>
+          </div>
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>Industry-recognized certificates upon completion</span>
+          </div>
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>24/7 access to learning materials and resources</span>
+          </div>
+          <div class="promo-feature-item">
+            <span class="promo-check">✓</span>
+            <span>One-on-one coaching sessions available</span>
+          </div>
+        </div>
+
+        <div class="promo-announcement">
+          <span class="announcement-badge">Coming Soon</span>
+          <p><strong>Revolutionary E-Learning Platform Launching Soon!</strong></p>
+          <p>Our state-of-the-art e-learning platform will be available in a few days! Get ready for an immersive
+            learning experience with AI-powered personalization, interactive exercises, real-time feedback, and gamified
+            learning paths.</p>
+        </div>
+
+        <div class="promo-cta-group">
+          <a href="https://conseiluxtraining.com" target="_blank" rel="noopener" class="btn primary promo-btn">Visit
+            Conseilux Training →</a>
+          <a href="https://conseiluxtraining.com" target="_blank" rel="noopener"
+            class="btn secondary promo-btn-alt">Request a Demo</a>
+        </div>
+
+        <div class="promo-trust">
+          <p>Trusted by leading organizations worldwide including Fortune 500 companies</p>
+        </div>
+      </div>
+      <div class="promo-visual">
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">🎓</div>
+          <h4>Professional Training</h4>
+          <p>Expert-led courses designed for career advancement and professional growth</p>
+          <ul class="promo-card-list">
+            <li>Business Communication</li>
+            <li>Presentation Skills</li>
+            <li>Email Writing</li>
+            <li>Negotiation English</li>
+          </ul>
+        </div>
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">💼</div>
+          <h4>Business English</h4>
+          <p>Corporate solutions for teams and organizations of all sizes</p>
+          <ul class="promo-card-list">
+            <li>Team Training Programs</li>
+            <li>Executive Coaching</li>
+            <li>Industry-Specific Courses</li>
+            <li>Custom Curriculum</li>
+          </ul>
+        </div>
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">🌐</div>
+          <h4>E-Learning Platform</h4>
+          <p>Learn at your own pace with interactive content and AI assistance</p>
+          <ul class="promo-card-list">
+            <li>Video Lessons</li>
+            <li>Interactive Exercises</li>
+            <li>Progress Tracking</li>
+            <li>Mobile App Access</li>
+          </ul>
+        </div>
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">📚</div>
+          <h4>Study Materials</h4>
+          <p>Comprehensive resources for self-paced learning and practice</p>
+          <ul class="promo-card-list">
+            <li>E-Books & Guides</li>
+            <li>Practice Tests</li>
+            <li>Audio Resources</li>
+            <li>Vocabulary Builder</li>
+          </ul>
+        </div>
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">👨‍🏫</div>
+          <h4>Expert Instructors</h4>
+          <p>Learn from certified professionals with years of teaching experience</p>
+          <ul class="promo-card-list">
+            <li>Native Speakers</li>
+            <li>CELTA/DELTA Certified</li>
+            <li>Industry Experts</li>
+            <li>Personal Mentors</li>
+          </ul>
+        </div>
+        <div class="promo-card promo-card-large">
+          <div class="promo-icon">🏆</div>
+          <h4>Certifications</h4>
+          <p>Earn recognized credentials to boost your career prospects</p>
+          <ul class="promo-card-list">
+            <li>Course Certificates</li>
+            <li>CEFR Assessments</li>
+            <li>LinkedIn Badges</li>
+            <li>Digital Credentials</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cefr-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>CEFR Levels Explained</h2>
+      <p>Understanding the Common European Framework of Reference for Languages</p>
+    </div>
+    <div class="cefr-grid">
+      <div class="cefr-card level-a">
+        <div class="cefr-level-badge">A1 - A2</div>
+        <h3>Basic User</h3>
+        <p class="cefr-description">Elementary proficiency - Can handle simple, everyday situations</p>
+        <ul class="cefr-features">
+          <li>Understand everyday expressions</li>
+          <li>Introduce yourself and others</li>
+          <li>Ask and answer simple questions</li>
+          <li>Interact in a simple way</li>
+          <li>Write short, simple postcards</li>
+          <li>Fill in forms with personal details</li>
+        </ul>
+      </div>
+      <div class="cefr-card level-b">
+        <div class="cefr-level-badge">B1 - B2</div>
+        <h3>Independent User</h3>
+        <p class="cefr-description">Intermediate proficiency - Can handle most situations while traveling</p>
+        <ul class="cefr-features">
+          <li>Understand main points of clear input</li>
+          <li>Deal with travel situations</li>
+          <li>Produce connected text</li>
+          <li>Describe experiences and events</li>
+          <li>Understand complex texts</li>
+          <li>Interact with native speakers fluently</li>
+        </ul>
+      </div>
+      <div class="cefr-card level-c">
+        <div class="cefr-level-badge">C1 - C2</div>
+        <h3>Proficient User</h3>
+        <p class="cefr-description">Advanced proficiency - Can use language flexibly and effectively</p>
+        <ul class="cefr-features">
+          <li>Understand virtually everything</li>
+          <li>Express yourself fluently</li>
+          <li>Use language flexibly</li>
+          <li>Produce clear, well-structured text</li>
+          <li>Understand implicit meaning</li>
+          <li>Express ideas precisely</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Impact in Numbers</h2>
+      <p>Join a global community of English learners</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-big-number">50,000+</div>
+        <div class="stat-title">Active Users</div>
+        <p>Professionals worldwide trust our platform</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌍</div>
+        <div class="stat-big-number">120+</div>
+        <div class="stat-title">Countries</div>
+        <p>Global reach across all continents</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-big-number">4.9/5</div>
+        <div class="stat-title">User Rating</div>
+        <p>Based on 10,000+ reviews</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-big-number">98%</div>
+        <div class="stat-title">Accuracy</div>
+        <p>Validated against official CEFR tests</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Frequently Asked Questions</h2>
+      <p>Everything you need to know about the Conseilux Test</p>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3 class="faq-question">How long does the test take?</h3>
+        <p class="faq-answer">The test consists of 90 questions and typically takes 15-30 minutes to complete, depending
+          on your pace. You can take breaks between sections.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-question">Is the test really free?</h3>
+        <p class="faq-answer">Yes! The Conseilux Test is completely free. You'll receive instant results and a
+          downloadable certificate at no cost.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-question">Do I need to register?</h3>
+        <p class="faq-answer">No registration required! Simply start the test and receive your results immediately upon
+          completion.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-question">Is the certificate recognized?</h3>
+        <p class="faq-answer">Our test is aligned with CEFR standards and widely recognized by employers and educational
+          institutions worldwide.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-question">Can I retake the test?</h3>
+        <p class="faq-answer">Absolutely! You can retake the test as many times as you want to track your progress and
+          improvement.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-question">What skills are tested?</h3>
+        <p class="faq-answer">The test evaluates grammar, vocabulary, reading comprehension, and overall language
+          proficiency across all CEFR levels.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Discover Your English Level?</h2>
+      <p>Join thousands of professionals who have already tested their English skills with Conseilux Test</p>
+      <div class="cta-features">
+        <span class="cta-feature">✓ No registration</span>
+        <span class="cta-feature">✓ 100% Free</span>
+        <span class="cta-feature">✓ Instant results</span>
+        <span class="cta-feature">✓ PDF certificate</span>
+      </div>
+      <a class="btn primary large-btn" href="{{ url_for('test') }}">Start Your Test Now</a>
+      <p class="cta-note">Takes only 15-30 minutes • Get your CEFR level instantly</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
