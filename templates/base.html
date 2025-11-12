@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google" content="notranslate" />
+  <meta http-equiv="Content-Language" content="en" />
   <title>Conseilux Test - Professional English Assessment</title>
   <meta name="description" content="Free professional English test with instant CEFR level results. Assess your English proficiency in 15-30 minutes.">
   <link rel="icon" type="image/png" href="/images/logo%20conseilux%20english.png" />
@@ -14,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" translate="no">
   <header class="site-header">
     <div class="container header-inner">
       <div class="brand">
@@ -33,7 +35,7 @@
     </div>
   </header>
 
-  <main class="{% block main_class %}container{% endblock %}">
+  <main class="{% block main_class %}container{% endblock %}" translate="no">
     {% block content %}{% endblock %}
   </main>
 
