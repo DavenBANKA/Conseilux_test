@@ -295,7 +295,7 @@ body.home-page{background: radial-gradient(1000px 700px at 10% 10%, rgba(255,165
 .faq-answer{font-size:15px;color:var(--text);opacity:.8;margin:0;line-height:1.7}
 .cta-features{display:flex;justify-content:center;gap:24px;margin:24px 0;flex-wrap:wrap}
 .cta-feature{font-size:15px;opacity:.9}
-.cta-note{font-size:14px;opacity:.8;margin-top:16px}
+.cta-note{font-size:14px;opacity:.8;margin-bottom:24px;margin-top:0}
 .page-hero{padding:80px 0 40px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-700) 100%);color:var(--white);text-align:center}
 .page-hero h1{font-size:42px;margin:0 0 16px;font-weight:700}
 .page-subtitle{font-size:20px;opacity:.9;margin:0}
