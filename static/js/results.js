@@ -59,6 +59,7 @@
       const certName = document.getElementById('cert-name');
       const certLevel = document.getElementById('cert-level');
       const certDate = document.getElementById('cert-date');
+      const certScore = document.getElementById('cert-score');
       const certPreview = document.getElementById('certificate-preview');
       
       if(certName && certLevel && certDate && certPreview){
@@ -68,6 +69,8 @@
         const today = new Date();
         const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}`;
         certDate.textContent = dateStr;
+        
+        if(certScore) certScore.textContent = `${score}/${total}`;
         
         // Show certificate
         certPreview.style.display = 'block';
