@@ -77,9 +77,11 @@
     console.error('Error loading certificate:', e);
   }
 
-  document.getElementById('restart-btn').addEventListener('click', function(){
+  document.getElementById('restart-btn').addEventListener('click', function(e){
+    e.preventDefault();
     clearForRestart();
     sessionStorage.removeItem('studentData');
+    window.location.href = '/register';
   });
 
   document.getElementById('print-btn').addEventListener('click', function(){

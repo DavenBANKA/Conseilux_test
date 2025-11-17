@@ -56,7 +56,11 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
     phone: document.getElementById('phone').value
   };
   
-  // Store in sessionStorage
+  // Clear any previous test data
+  localStorage.removeItem('conseilux_test_state');
+  localStorage.removeItem('conseilux_test_start_ts');
+  
+  // Store new student data in sessionStorage
   sessionStorage.setItem('studentData', JSON.stringify(studentData));
   
   // Redirect to test
