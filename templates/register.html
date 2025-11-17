@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block body_class %}register-page{% endblock %}
+{% block content %}
+<section class="register-section">
+  <div class="container register-container">
+    <div class="register-card">
+      <div class="register-header">
+        <h1>Student Registration</h1>
+        <p>Please provide your information before taking the test</p>
+      </div>
+      
+      <form id="register-form" class="register-form">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+33 6 12 34 56 78">
+        </div>
+        
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" id="terms" required>
+            <span>I agree that this is an English proficiency test and I will not use translation tools *</span>
+          </label>
+        </div>
+        
+        <button type="submit" class="btn primary large-btn">Start the Test</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('register-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const studentData = {
+    firstName: document.getElementById('firstName').value,
+    lastName: document.getElementById('lastName').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value
+  };
+  
+  // Store in sessionStorage
+  sessionStorage.setItem('studentData', JSON.stringify(studentData));
+  
+  // Redirect to test
+  window.location.href = '/test';
+});
+</script>
+{% endblock %}

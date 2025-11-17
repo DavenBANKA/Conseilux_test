@@ -32,6 +32,10 @@ def cefr_levels():
 def faq():
     return render_template('faq.html')
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
 @app.route('/images/<path:filename>')
 def images(filename: str):
     images_dir = os.path.join(app.root_path, 'images')

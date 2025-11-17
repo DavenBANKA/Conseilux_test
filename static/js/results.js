@@ -48,11 +48,28 @@
   const timeStr = elapsedString();
 
   document.getElementById('score-line').textContent = `Score: ${score} / ${total}`;
-  document.getElementById('cefr-line').textContent = `Niveau: ${mapCEFR(score)}`;
-  document.getElementById('time-line').textContent = `Temps: ${timeStr}`;
+  document.getElementById('cefr-line').textContent = `Level: ${mapCEFR(score)}`;
+  document.getElementById('time-line').textContent = `Time: ${timeStr}`;
+
+  // Load student data and populate certificate
+  const studentData = JSON.parse(sessionStorage.getItem('studentData') || '{}');
+  if(studentData.firstName && studentData.lastName){
+    const fullName = `${studentData.firstName} ${studentData.lastName}`;
+    document.getElementById('cert-name').textContent = fullName;
+    document.getElementById('cert-level').textContent = mapCEFR(score);
+    document.getElementById('cert-score').textContent = `${score}/${total}`;
+    
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}`;
+    document.getElementById('cert-date').textContent = dateStr;
+    
+    // Show certificate
+    document.getElementById('certificate-preview').style.display = 'block';
+  }
 
   document.getElementById('restart-btn').addEventListener('click', function(){
     clearForRestart();
+    sessionStorage.removeItem('studentData');
   });
 
   document.getElementById('print-btn').addEventListener('click', function(){
@@ -60,18 +77,17 @@
   });
 
   document.getElementById('pdf-btn').addEventListener('click', function(){
-    // Astuce: la plupart des navigateurs proposent l'option "Enregistrer au format PDF" via l'impression
     window.print();
   });
 
   document.getElementById('share-btn').addEventListener('click', async function(){
-    const text = `J'ai obtenu ${score}/${total} au Conseilux Test — Niveau ${mapCEFR(score)}.`;
+    const text = `I scored ${score}/${total} on the Conseilux Test — Level ${mapCEFR(score)}.`;
     try{
       if(navigator.share){
         await navigator.share({ title: 'Conseilux Test', text, url: window.location.origin });
       } else {
         await navigator.clipboard.writeText(text + ' ' + window.location.origin);
-        alert('Résultats copiés dans le presse-papiers.');
+        alert('Results copied to clipboard.');
       }
     }catch(e){
       console.error(e);

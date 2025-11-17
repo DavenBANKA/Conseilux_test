@@ -22,11 +22,51 @@
           <div id="time-line" class="stat-value">00:00:00</div>
         </div>
       </div>
+      
+      <!-- Certificate Preview -->
+      <div id="certificate-preview" class="certificate-container" style="display:none;">
+        <div class="certificate-border">
+          <div class="certificate-pattern"></div>
+          <div class="certificate-seal">
+            <div class="certificate-seal-text">Certificate<br>of<br>Achievement</div>
+          </div>
+          <div class="certificate-ribbon"></div>
+          <div class="certificate-content">
+            <h1 class="certificate-title">CERTIFICATE</h1>
+            <p class="certificate-subtitle">OF ACHIEVEMENT</p>
+            <h2 class="certificate-name" id="cert-name">Student Name</h2>
+            <p class="certificate-text">
+              This is to certify that the above-named individual has successfully completed the 
+              Conseilux English Proficiency Test and has demonstrated competency at the 
+              <strong id="cert-level">CEFR Level</strong> according to the Common European Framework 
+              of Reference for Languages.
+            </p>
+            <div class="certificate-details">
+              <div class="certificate-detail">
+                <div class="certificate-detail-label">Date</div>
+                <div class="certificate-detail-value" id="cert-date">2025/01/17</div>
+              </div>
+              <div class="certificate-detail">
+                <div class="certificate-detail-label">Score</div>
+                <div class="certificate-detail-value" id="cert-score">0/90</div>
+              </div>
+              <div class="certificate-detail">
+                <div class="certificate-detail-label">Signature</div>
+                <svg class="certificate-signature" viewBox="0 0 150 60">
+                  <path d="M10,40 Q30,10 50,30 T90,35 Q110,40 130,25" stroke="#0b2545" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+            </div>
+            <p class="certificate-company">CONSEILUX TRAINING AND DEVELOPMENT</p>
+          </div>
+        </div>
+      </div>
+      
       <div class="result-actions">
-        <a class="btn primary" href="{{ url_for('test') }}" id="restart-btn">Retake the Test</a>
+        <a class="btn primary" href="{{ url_for('register') }}" id="restart-btn">Retake the Test</a>
         <button class="btn secondary" id="pdf-btn">Download Certificate</button>
         <button class="btn secondary" id="share-btn">Share Results</button>
-        <button class="btn secondary" id="print-btn">Print</button>
+        <button class="btn secondary" id="print-btn">Print Certificate</button>
       </div>
     </div>
   </div>
