@@ -34,12 +34,12 @@
   }
 
   function mapCEFR(score){
-    if(score <= 20) return 'A1 (Débutant)';
-    if(score <= 35) return 'A2 (Faux débutant)';
-    if(score <= 60) return 'B1 (Intermédiaire)';
-    if(score <= 80) return 'B2 (Avancé)';
-    if(score <= 85) return 'C1 (Courant)';
-    return 'C2 (Bilingue)';
+    if(score <= 20) return 'A1 (Beginner)';
+    if(score <= 35) return 'A2 (Elementary)';
+    if(score <= 60) return 'B1 (Intermediate)';
+    if(score <= 80) return 'B2 (Upper Intermediate)';
+    if(score <= 85) return 'C1 (Advanced)';
+    return 'C2 (Proficient)';
   }
 
   const state = loadState();
@@ -52,19 +52,29 @@
   document.getElementById('time-line').textContent = `Time: ${timeStr}`;
 
   // Load student data and populate certificate
-  const studentData = JSON.parse(sessionStorage.getItem('studentData') || '{}');
-  if(studentData.firstName && studentData.lastName){
-    const fullName = `${studentData.firstName} ${studentData.lastName}`;
-    document.getElementById('cert-name').textContent = fullName;
-    document.getElementById('cert-level').textContent = mapCEFR(score);
-    document.getElementById('cert-score').textContent = `${score}/${total}`;
-    
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}`;
-    document.getElementById('cert-date').textContent = dateStr;
-    
-    // Show certificate
-    document.getElementById('certificate-preview').style.display = 'block';
+  try {
+    const studentData = JSON.parse(sessionStorage.getItem('studentData') || '{}');
+    if(studentData.firstName && studentData.lastName){
+      const fullName = `${studentData.firstName} ${studentData.lastName}`;
+      const certName = document.getElementById('cert-name');
+      const certLevel = document.getElementById('cert-level');
+      const certDate = document.getElementById('cert-date');
+      const certPreview = document.getElementById('certificate-preview');
+      
+      if(certName && certLevel && certDate && certPreview){
+        certName.textContent = fullName;
+        certLevel.textContent = mapCEFR(score);
+        
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}`;
+        certDate.textContent = dateStr;
+        
+        // Show certificate
+        certPreview.style.display = 'block';
+      }
+    }
+  } catch(e) {
+    console.error('Error loading certificate:', e);
   }
 
   document.getElementById('restart-btn').addEventListener('click', function(){

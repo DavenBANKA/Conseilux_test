@@ -1,4 +1,12 @@
 (function(){
+  // Check if user is registered
+  const studentData = sessionStorage.getItem('studentData');
+  if(!studentData){
+    alert('Please register before taking the test.');
+    window.location.href = '/register';
+    return;
+  }
+
   const LS_KEY = 'conseilux_test_state';
   const LS_START = 'conseilux_test_start_ts';
 
