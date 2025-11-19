@@ -22,37 +22,8 @@
           <div id="time-line" class="stat-value">00:00:00</div>
         </div>
       </div>
-      
-      <!-- Certificate Preview -->
-      <div id="certificate-preview" class="certificate-container" style="display:none;">
-        <div class="certificate-image-wrapper">
-          <img src="{{ url_for('images', filename='38072121-95e9-40c5-8cff-9de4ee6e40cc.jpg') }}" 
-               alt="Certificate" class="certificate-background">
-          <div class="certificate-overlay">
-            <h2 class="certificate-student-name" id="cert-name">Student Name</h2>
-            <p class="certificate-description" id="cert-description">
-              This is to certify that the above-named individual has successfully completed the 
-              Conseilux English Proficiency Test and has demonstrated competency at the 
-              <strong id="cert-level">CEFR Level</strong> according to the Common European Framework 
-              of Reference for Languages.
-            </p>
-            <div class="certificate-info-row">
-              <div class="certificate-info-item">
-                <span class="cert-info-value" id="cert-date">2025/01/17</span>
-              </div>
-              <div class="certificate-info-item">
-                <span class="cert-info-value" id="cert-score">0/90</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <div class="result-actions">
         <a class="btn primary" href="{{ url_for('register') }}" id="restart-btn">Retake the Test</a>
-        <button class="btn secondary" id="pdf-btn">Download Certificate</button>
-        <button class="btn secondary" id="share-btn">Share Results</button>
-        <button class="btn secondary" id="print-btn">Print Certificate</button>
       </div>
     </div>
   </div>

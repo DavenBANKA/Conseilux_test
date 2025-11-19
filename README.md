@@ -1,6 +1,6 @@
 # Conseilux Test
 
-Professional English Assessment Platform - CEFR Certified
+Professional English Assessment Platform - CEFR Aligned
 
 ## About
 
@@ -10,7 +10,6 @@ Conseilux Test is a comprehensive English language assessment platform that prov
 
 - 90-question comprehensive English test
 - Instant CEFR level results (A1-C2)
-- Downloadable PDF certificates
 - Fully responsive design
 - Multiple language skills assessment
 - Professional training information

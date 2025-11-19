@@ -51,61 +51,11 @@
   document.getElementById('cefr-line').textContent = `Level: ${mapCEFR(score)}`;
   document.getElementById('time-line').textContent = `Time: ${timeStr}`;
 
-  // Load student data and populate certificate
-  try {
-    const studentData = JSON.parse(sessionStorage.getItem('studentData') || '{}');
-    if(studentData.firstName && studentData.lastName){
-      const fullName = `${studentData.firstName} ${studentData.lastName}`;
-      const certName = document.getElementById('cert-name');
-      const certLevel = document.getElementById('cert-level');
-      const certDate = document.getElementById('cert-date');
-      const certScore = document.getElementById('cert-score');
-      const certPreview = document.getElementById('certificate-preview');
-      
-      if(certName && certLevel && certDate && certPreview){
-        certName.textContent = fullName;
-        certLevel.textContent = mapCEFR(score);
-        
-        const today = new Date();
-        const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}`;
-        certDate.textContent = dateStr;
-        
-        if(certScore) certScore.textContent = `${score}/${total}`;
-        
-        // Show certificate
-        certPreview.style.display = 'block';
-      }
-    }
-  } catch(e) {
-    console.error('Error loading certificate:', e);
-  }
-
   document.getElementById('restart-btn').addEventListener('click', function(e){
     e.preventDefault();
     clearForRestart();
     sessionStorage.removeItem('studentData');
     window.location.href = '/register';
   });
-
-  document.getElementById('print-btn').addEventListener('click', function(){
-    window.print();
-  });
-
-  document.getElementById('pdf-btn').addEventListener('click', function(){
-    window.print();
-  });
-
-  document.getElementById('share-btn').addEventListener('click', async function(){
-    const text = `I scored ${score}/${total} on the Conseilux Test — Level ${mapCEFR(score)}.`;
-    try{
-      if(navigator.share){
-        await navigator.share({ title: 'Conseilux Test', text, url: window.location.origin });
-      } else {
-        await navigator.clipboard.writeText(text + ' ' + window.location.origin);
-        alert('Results copied to clipboard.');
-      }
-    }catch(e){
-      console.error(e);
-    }
-  });
 })();
+
