@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body_class %}test-page{% endblock %}
+{% block content %}
+<section class="test">
+  <div class="container test-container">
+    <div class="test-header">
+      <div class="progress-wrap">
+        <div id="progress" class="progress-label">Listening - Question 1 of 26</div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+      <div class="timers">
+        <div id="perq-timer" class="timer strong">10s</div>
+        <div id="timer" class="timer">00:00:00</div>
+      </div>
+    </div>
+    <div id="question-card" class="card fade-in">
+      <h3 id="question-text">Listening question</h3>
+      <div id="audio-controls">
+        <button id="play-audio" class="btn secondary">🔊 Play Audio</button>
+        <div id="speech-status">Click Play to listen</div>
+      </div>
+      <form id="options-form" class="options"></form>
+      <div class="actions">
+        <button id="next-btn" class="btn primary">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/questions.js') }}"></script>
+<script src="{{ url_for('static', filename='js/listening.js') }}"></script>
+{% endblock %}

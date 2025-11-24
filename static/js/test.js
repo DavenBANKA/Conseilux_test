@@ -103,8 +103,8 @@
   function render(){
     const q = questions[state.index];
     if(!q){
-      // terminé => aller aux résultats
-      window.location.href = '/resultats';
+      // terminé => aller à l'étape Listening
+      window.location.href = '/listening';
       return;
     }
     qEl.textContent = q.text;
