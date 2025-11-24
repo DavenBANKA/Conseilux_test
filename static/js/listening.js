@@ -308,11 +308,12 @@
     }
   ];
 
-  let state = loadState() || { index: 0, answers: {} };
+  let state = loadState() || { index: 0, answers: {}, playCount: {} };
   let totalSeconds = 0;
-  const PER_Q_LIMIT = 10;
-  let perQRemaining = PER_Q_LIMIT;
-  let perQInterval = null;
+  const TOTAL_TIME_LIMIT = 600; // 10 minutes = 600 seconds
+  const MAX_PLAYS = 2; // Maximum 2 plays per question
+  let timeRemaining = TOTAL_TIME_LIMIT;
+  let timerInterval = null;
 
   function saveState(){ localStorage.setItem(LS_LISTENING_KEY, JSON.stringify(state)); }
   function loadState(){
@@ -320,11 +321,19 @@
     catch(e){ return null; }
   }
 
-  function speak(text){
+  function speak(text, questionId){
     if(!('speechSynthesis' in window)){
       if(speechStatusEl) speechStatusEl.textContent = 'Speech not supported in this browser';
       return;
     }
+    
+    // Check play count
+    const currentPlayCount = state.playCount[questionId] || 0;
+    if(currentPlayCount >= MAX_PLAYS){
+      if(speechStatusEl) speechStatusEl.textContent = `Maximum ${MAX_PLAYS} plays reached`;
+      return;
+    }
+    
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
@@ -336,8 +345,18 @@
       if(playAudioBtn) playAudioBtn.disabled = true;
     };
     utterance.onend = () => {
-      if(speechStatusEl) speechStatusEl.textContent = 'Finished. Click Play to listen again';
-      if(playAudioBtn) playAudioBtn.disabled = false;
+      // Increment play count
+      state.playCount[questionId] = currentPlayCount + 1;
+      saveState();
+      
+      const remaining = MAX_PLAYS - state.playCount[questionId];
+      if(remaining > 0){
+        if(speechStatusEl) speechStatusEl.textContent = `Finished. ${remaining} play(s) remaining`;
+        if(playAudioBtn) playAudioBtn.disabled = false;
+      } else {
+        if(speechStatusEl) speechStatusEl.textContent = 'Maximum plays reached';
+        if(playAudioBtn) playAudioBtn.disabled = true;
+      }
     };
     utterance.onerror = () => {
       if(speechStatusEl) speechStatusEl.textContent = 'Error. Try again.';
@@ -346,29 +365,34 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function startPerQCountdown(){
-    stopPerQCountdown();
-    perQRemaining = PER_Q_LIMIT;
-    if(perQTimerEl){ perQTimerEl.classList.remove('pulse'); }
-    renderPerQTimer();
-    perQInterval = setInterval(()=>{
-      perQRemaining -= 1;
-      if(perQRemaining <= 0){
-        stopPerQCountdown();
-        goNext(true);
+  function startTimer(){
+    if(timerInterval) return; // Already started
+    timerInterval = setInterval(()=>{
+      timeRemaining -= 1;
+      if(timeRemaining <= 0){
+        stopTimer();
+        // Time's up - submit test
+        alert('Time is up! Submitting your test...');
+        window.location.href = '/resultats';
       }
-      renderPerQTimer();
+      renderTimer();
     }, 1000);
   }
 
-  function stopPerQCountdown(){
-    if(perQInterval){ clearInterval(perQInterval); perQInterval = null; }
+  function stopTimer(){
+    if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
   }
 
-  function renderPerQTimer(){
+  function renderTimer(){
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
     if(perQTimerEl){
-      perQTimerEl.textContent = perQRemaining + 's';
-      if(perQRemaining <= 3){ perQTimerEl.classList.add('pulse'); }
+      perQTimerEl.textContent = String(minutes).padStart(2,'0') + ':' + String(seconds).padStart(2,'0');
+      if(timeRemaining <= 60){ 
+        perQTimerEl.classList.add('pulse'); 
+      } else {
+        perQTimerEl.classList.remove('pulse');
+      }
     }
   }
 
@@ -400,7 +424,7 @@
   function render(){
     const q = questions[state.index];
     if(!q){
-      stopPerQCountdown();
+      stopTimer();
       window.location.href = '/resultats';
       return;
     }
@@ -414,8 +438,17 @@
     progressEl.textContent = 'Listening - Question ' + (state.index+1) + ' of ' + questions.length;
     updateProgressBar();
 
-    if(speechStatusEl) speechStatusEl.textContent = 'Click Play to listen';
-    if(playAudioBtn) playAudioBtn.disabled = false;
+    // Update play button status
+    const currentPlayCount = state.playCount[q.id] || 0;
+    const remaining = MAX_PLAYS - currentPlayCount;
+    
+    if(remaining > 0){
+      if(speechStatusEl) speechStatusEl.textContent = `Click Play to listen (${remaining} play(s) remaining)`;
+      if(playAudioBtn) playAudioBtn.disabled = false;
+    } else {
+      if(speechStatusEl) speechStatusEl.textContent = 'Maximum plays reached';
+      if(playAudioBtn) playAudioBtn.disabled = true;
+    }
 
     formEl.innerHTML = '';
     ['a','b','c','d'].forEach(letter => {
@@ -435,7 +468,7 @@
       formEl.appendChild(wrapper);
     });
 
-    startPerQCountdown();
+    renderTimer();
   }
 
   function updateTimer(){
@@ -454,8 +487,6 @@
 
   nextBtn.addEventListener('click', function(e){
     e.preventDefault();
-    stopPerQCountdown();
-    if(perQTimerEl){ perQTimerEl.classList.remove('pulse'); }
     goNext(false);
   });
 
@@ -463,10 +494,11 @@
     e.preventDefault();
     const q = questions[state.index];
     if(q && q.speech){
-      speak(q.speech);
+      speak(q.speech, q.id);
     }
   });
 
   render();
+  startTimer();
   setInterval(updateTimer, 1000);
 })();
