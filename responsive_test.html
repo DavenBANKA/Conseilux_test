@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Responsivité - Conseilux</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: clamp(24px, 5vw, 48px);
+    }
+    
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .test-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .test-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+    
+    .test-card h2 {
+      font-size: clamp(18px, 3vw, 24px);
+      margin-bottom: 12px;
+    }
+    
+    .test-card p {
+      font-size: clamp(14px, 2vw, 16px);
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    
+    .breakpoint-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      z-index: 1000;
+    }
+    
+    .breakpoint-indicator::before {
+      content: 'Desktop (> 1024px)';
+    }
+    
+    .feature-list {
+      list-style: none;
+      margin-top: 16px;
+    }
+    
+    .feature-list li {
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+    }
+    
+    .feature-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #4ade80;
+      font-weight: bold;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 120px;
+    }
+    
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+      background: #f1c40f;
+      color: #0b2545;
+    }
+    
+    .btn-primary:hover {
+      background: #d4ac0d;
+    }
+    
+    @media (max-width: 1024px) {
+      .breakpoint-indicator::before {
+        content: 'Tablette (768px - 1024px)';
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .breakpoint-indicator::before {
+        content: 'Mobile (480px - 768px)';
+      }
+      
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .breakpoint-indicator::before {
+        content: 'Petit Mobile (< 480px)';
+      }
+      
+      body {
+        padding: 12px;
+      }
+      
+      .test-card {
+        padding: 16px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .breakpoint-indicator::before {
+        content: 'Très Petit Mobile (< 360px)';
+      }
+      
+      .breakpoint-indicator {
+        font-size: 12px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Test de Responsivité Conseilux</h1>
+    
+    <div class="test-grid">
+      <div class="test-card">
+        <h2>📱 Menu Mobile</h2>
+        <p>Le menu hamburger s'active automatiquement sur les écrans < 768px avec animation fluide.</p>
+        <ul class="feature-list">
+          <li>Toggle hamburger</li>
+          <li>Animation smooth</li>
+          <li>Fermeture auto</li>
+        </ul>
+      </div>
+      
+      <div class="test-card">
+        <h2>🎨 Grilles Adaptatives</h2>
+        <p>Les grilles s'adaptent automatiquement : 4 colonnes → 2 colonnes → 1 colonne.</p>
+        <ul class="feature-list">
+          <li>Desktop: 3-4 cols</li>
+          <li>Tablette: 2 cols</li>
+          <li>Mobile: 1 col</li>
+        </ul>
+      </div>
+      
+      <div class="test-card">
+        <h2>👆 Touch Optimisé</h2>
+        <p>Tous les éléments interactifs ont une taille minimale de 44x44px sur mobile.</p>
+        <ul class="feature-list">
+          <li>Boutons 44x44px</li>
+          <li>Zones tactiles</li>
+          <li>Feedback visuel</li>
+        </ul>
+      </div>
+      
+      <div class="test-card">
+        <h2>📐 Breakpoints</h2>
+        <p>5 breakpoints principaux pour une expérience optimale sur tous les appareils.</p>
+        <ul class="feature-list">
+          <li>Desktop > 1024px</li>
+          <li>Tablette 768-1024px</li>
+          <li>Mobile 480-768px</li>
+          <li>Petit 360-480px</li>
+          <li>Mini < 360px</li>
+        </ul>
+      </div>
+      
+      <div class="test-card">
+        <h2>🖼️ Images Responsive</h2>
+        <p>Toutes les images s'adaptent automatiquement avec max-width: 100%.</p>
+        <ul class="feature-list">
+          <li>Auto-scaling</li>
+          <li>Ratio préservé</li>
+          <li>Performance</li>
+        </ul>
+      </div>
+      
+      <div class="test-card">
+        <h2>♿ Accessibilité</h2>
+        <p>Support complet pour reduced motion, high contrast et print.</p>
+        <ul class="feature-list">
+          <li>Reduced motion</li>
+          <li>High contrast</li>
+          <li>Print styles</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="test-card">
+      <h2>🧪 Testez les Boutons Responsive</h2>
+      <p>Ces boutons s'adaptent automatiquement : côte à côte sur desktop, empilés sur mobile.</p>
+      <div class="button-group">
+        <button class="btn btn-primary">Bouton Principal</button>
+        <button class="btn">Bouton Secondaire</button>
+        <button class="btn">Bouton Tertiaire</button>
+      </div>
+    </div>
+    
+    <div class="test-card" style="margin-top: 20px;">
+      <h2>✅ Checklist de Test</h2>
+      <ul class="feature-list">
+        <li>Redimensionnez la fenêtre du navigateur</li>
+        <li>Testez en mode portrait et paysage</li>
+        <li>Vérifiez le menu hamburger sur mobile</li>
+        <li>Testez les interactions tactiles</li>
+        <li>Vérifiez l'indicateur de breakpoint en bas à droite</li>
+        <li>Testez sur différents appareils réels</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="breakpoint-indicator"></div>
+  
+  <script>
+    // Afficher la largeur actuelle
+    function updateBreakpoint() {
+      const indicator = document.querySelector('.breakpoint-indicator');
+      const width = window.innerWidth;
+      indicator.style.display = 'block';
+    }
+    
+    window.addEventListener('resize', updateBreakpoint);
+    updateBreakpoint();
+    
+    // Animation au scroll
+    const cards = document.querySelectorAll('.test-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

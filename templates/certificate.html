@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block body_class %}certificate-page{% endblock %}
+{% block content %}
+<section class="certificate-section">
+  <div class="certificate-container">
+    
+    <!-- Certificate Card -->
+    <div id="certificate" class="certificate-card">
+      
+      <!-- Decorative Border -->
+      <div class="certificate-border">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+      </div>
+      
+      <!-- Header -->
+      <div class="certificate-header">
+        <div class="certificate-logo">
+          <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Conseilux Logo">
+        </div>
+        <h1 class="certificate-title">Certificate of Achievement</h1>
+        <p class="certificate-subtitle">English Proficiency Assessment</p>
+      </div>
+      
+      <!-- Body -->
+      <div class="certificate-body">
+        <p class="certificate-intro">This is to certify that</p>
+        
+        <h2 class="student-name" id="student-name">Student Name</h2>
+        
+        <p class="certificate-text">
+          has successfully completed the Conseilux English Proficiency Test
+          <br>and demonstrated competence at the following level:
+        </p>
+        
+        <div class="level-badge" id="level-badge">
+          <div class="level-icon">🏆</div>
+          <div class="level-info">
+            <div class="level-name" id="level-name">B2</div>
+            <div class="level-description" id="level-description">Upper Intermediate</div>
+          </div>
+        </div>
+        
+        <div class="score-details">
+          <div class="score-item">
+            <div class="score-label">Reading Score</div>
+            <div class="score-value" id="reading-score">--/90</div>
+          </div>
+          <div class="score-divider"></div>
+          <div class="score-item">
+            <div class="score-label">Listening Score</div>
+            <div class="score-value" id="listening-score">--/26</div>
+          </div>
+          <div class="score-divider"></div>
+          <div class="score-item">
+            <div class="score-label">Total Score</div>
+            <div class="score-value" id="total-score">--/116</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="certificate-footer">
+        <div class="certificate-date">
+          <div class="date-label">Date of Completion</div>
+          <div class="date-value" id="completion-date">January 1, 2025</div>
+        </div>
+        
+        <div class="certificate-signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">Conseilux Training</div>
+          <div class="signature-title">Director of Assessment</div>
+        </div>
+        
+        <div class="certificate-id">
+          <div class="id-label">Certificate ID</div>
+          <div class="id-value" id="certificate-id">CX-2025-XXXX</div>
+        </div>
+      </div>
+      
+      <!-- Watermark -->
+      <div class="certificate-watermark">
+        <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Watermark">
+      </div>
+      
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="certificate-actions">
+      <button onclick="downloadCertificate()" class="btn btn-primary btn-large">
+        <span class="btn-icon">📥</span>
+        Download Certificate
+      </button>
+      <button onclick="printCertificate()" class="btn btn-secondary">
+        <span class="btn-icon">🖨️</span>
+        Print Certificate
+      </button>
+      <a href="/" class="btn btn-outline">
+        <span class="btn-icon">🏠</span>
+        Back to Home
+      </a>
+    </div>
+    
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function() {
+  // Get student data from sessionStorage
+  const studentDataStr = sessionStorage.getItem('studentData');
+  const studentData = studentDataStr ? JSON.parse(studentDataStr) : null;
+  
+  // Get test results from localStorage
+  const readingAnswers = JSON.parse(localStorage.getItem('conseilux_test_state') || '{}').answers || {};
+  const listeningAnswers = JSON.parse(localStorage.getItem('conseilux_listening_state_v2') || '{}').answers || {};
+  
+  // Calculate scores
+  const readingScore = Object.keys(readingAnswers).length;
+  const listeningScore = Object.keys(listeningAnswers).length;
+  const totalScore = readingScore + listeningScore;
+  
+  // Determine CEFR level based on total score
+  function getCEFRLevel(score) {
+    if (score >= 100) return { level: 'C1', name: 'Advanced', color: '#9c27b0' };
+    if (score >= 80) return { level: 'B2', name: 'Upper Intermediate', color: '#2196f3' };
+    if (score >= 60) return { level: 'B1', name: 'Intermediate', color: '#00bcd4' };
+    if (score >= 40) return { level: 'A2', name: 'Elementary', color: '#4caf50' };
+    return { level: 'A1', name: 'Beginner', color: '#8bc34a' };
+  }
+  
+  const cefrLevel = getCEFRLevel(totalScore);
+  
+  // Update certificate with student data
+  if (studentData) {
+    const fullName = `${studentData.firstName} ${studentData.lastName}`;
+    document.getElementById('student-name').textContent = fullName;
+  }
+  
+  // Update scores
+  document.getElementById('reading-score').textContent = `${readingScore}/90`;
+  document.getElementById('listening-score').textContent = `${listeningScore}/26`;
+  document.getElementById('total-score').textContent = `${totalScore}/116`;
+  
+  // Update CEFR level
+  document.getElementById('level-name').textContent = cefrLevel.level;
+  document.getElementById('level-description').textContent = cefrLevel.name;
+  document.getElementById('level-badge').style.borderColor = cefrLevel.color;
+  document.getElementById('level-name').style.color = cefrLevel.color;
+  
+  // Update date
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('completion-date').textContent = today.toLocaleDateString('en-US', options);
+  
+  // Generate certificate ID
+  const certId = `CX-${today.getFullYear()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+  document.getElementById('certificate-id').textContent = certId;
+  
+  // Download certificate as image
+  window.downloadCertificate = function() {
+    const certificate = document.getElementById('certificate');
+    const buttons = document.querySelector('.certificate-actions');
+    
+    // Hide buttons temporarily
+    buttons.style.display = 'none';
+    
+    html2canvas(certificate, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      logging: false
+    }).then(canvas => {
+      // Show buttons again
+      buttons.style.display = 'flex';
+      
+      // Download
+      const link = document.createElement('a');
+      const fileName = studentData 
+        ? `Conseilux_Certificate_${studentData.firstName}_${studentData.lastName}.png`
+        : 'Conseilux_Certificate.png';
+      link.download = fileName;
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  };
+  
+  // Print certificate
+  window.printCertificate = function() {
+    window.print();
+  };
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block body_class %}test-page transition-page{% endblock %}
+
+{% block content %}
+<section class="test reading-transition">
+  <div class="container">
+    <div class="transition-card">
+
+      <!-- Success Icon -->
+      <div class="success-icon">✅</div>
+
+      <!-- Main Message -->
+      <h1 class="transition-title">Reading Test Completed</h1>
+      <p class="transition-subtitle">Prepare for the Listening section</p>
+
+      <!-- Countdown Section -->
+      <div id="countdown-section" class="countdown-section">
+        <div class="countdown-message">
+          <span class="countdown-icon">🎧</span>
+          <p>Listening Test Starting Soon</p>
+        </div>
+
+        <div class="countdown-timer">
+          <div class="countdown-circle">
+            <svg class="countdown-svg" viewBox="0 0 100 100">
+              <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
+              <circle id="countdown-progress" class="countdown-progress" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="countdown-number" id="countdown-number">5</div>
+          </div>
+        </div>
+
+        <div class="countdown-bar-container">
+          <div id="countdown-bar" class="countdown-bar"></div>
+        </div>
+
+        <p class="countdown-text">Starting in <span id="countdown-text">5</span> seconds</p>
+      </div>
+
+      <!-- Instructions Box -->
+      <div class="instructions-box">
+        <h2>Listening Test Instructions</h2>
+
+        <div class="instructions-grid">
+          <div class="instruction-card">
+            <div class="instruction-icon">🔊</div>
+            <div class="instruction-title">Listen Carefully</div>
+            <div class="instruction-text">Click "Play Audio" for each section</div>
+          </div>
+
+          <div class="instruction-card">
+            <div class="instruction-icon">🔢</div>
+            <div class="instruction-title">2 Plays Maximum</div>
+            <div class="instruction-text">Use your plays wisely</div>
+          </div>
+
+          <div class="instruction-card">
+            <div class="instruction-icon">⏱️</div>
+            <div class="instruction-title">10 Minutes Total</div>
+            <div class="instruction-text">Complete all 5 sections</div>
+          </div>
+
+          <div class="instruction-card">
+            <div class="instruction-icon">📊</div>
+            <div class="instruction-title">5 CEFR Levels</div>
+            <div class="instruction-text">A1, A2, B1, B2, C1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Check -->
+      <div class="audio-check-box">
+        <div class="audio-check-icon">🎵</div>
+        <div class="audio-check-content">
+          <p class="audio-check-title">Audio Check</p>
+          <p class="audio-check-text">Ensure your volume is on and you can hear clearly</p>
+          <button id="test-audio-btn" class="btn-test-audio">🔊 Test Audio</button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <button id="start-now-btn" class="btn btn-primary">
+          Start Listening Test
+        </button>
+        <a href="/resultats" class="btn btn-secondary">View Reading Results</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    let countdown = 5;
+    let countdownInterval = null;
+    let autoStartEnabled = true;
+
+    const countdownSection = document.getElementById('countdown-section');
+    const countdownNumber = document.getElementById('countdown-number');
+    const countdownText = document.getElementById('countdown-text');
+    const countdownBar = document.getElementById('countdown-bar');
+    const countdownProgress = document.getElementById('countdown-progress');
+    const startNowBtn = document.getElementById('start-now-btn');
+    const testAudioBtn = document.getElementById('test-audio-btn');
+
+    // Calculate circle progress
+    const radius = 45;
+    const circumference = 2 * Math.PI * radius;
+    countdownProgress.style.strokeDasharray = circumference;
+    countdownProgress.style.strokeDashoffset = circumference;
+
+    function updateCountdown() {
+      countdown--;
+
+      if (countdownNumber) countdownNumber.textContent = countdown;
+      if (countdownText) countdownText.textContent = countdown;
+
+      // Update progress bar
+      const barProgress = ((5 - countdown) / 5) * 100;
+      if (countdownBar) countdownBar.style.width = barProgress + '%';
+
+      // Update circle progress
+      const offset = circumference - (barProgress / 100) * circumference;
+      if (countdownProgress) countdownProgress.style.strokeDashoffset = offset;
+
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        if (autoStartEnabled) {
+          startListening();
+        }
+      }
+    }
+
+    function startCountdown() {
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    function stopCountdown() {
+      autoStartEnabled = false;
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
+      if (countdownSection) {
+        countdownSection.style.opacity = '0.5';
+      }
+    }
+
+    function startListening() {
+      window.location.href = '/listening';
+    }
+
+    function testAudio() {
+      if (!('speechSynthesis' in window)) {
+        alert('Speech synthesis not supported in your browser');
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance('Hello! This is an audio test. Can you hear me clearly?');
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      if (testAudioBtn) {
+        testAudioBtn.textContent = '🔊 Playing...';
+        testAudioBtn.disabled = true;
+      }
+
+      utterance.onend = () => {
+        if (testAudioBtn) {
+          testAudioBtn.textContent = '🔊 Test Audio';
+          testAudioBtn.disabled = false;
+        }
+      };
+
+      utterance.onerror = () => {
+        if (testAudioBtn) {
+          testAudioBtn.textContent = '🔊 Test Audio';
+          testAudioBtn.disabled = false;
+        }
+        alert('Error playing audio. Please check your device settings.');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Event listeners
+    if (startNowBtn) {
+      startNowBtn.addEventListener('click', function () {
+        stopCountdown();
+        startListening();
+      });
+    }
+
+    if (testAudioBtn) {
+      testAudioBtn.addEventListener('click', testAudio);
+    }
+
+    // Start countdown on page load
+    setTimeout(startCountdown, 1000);
+  })();
+</script>
+{% endblock %}

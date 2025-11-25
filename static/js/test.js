@@ -103,8 +103,8 @@
   function render(){
     const q = questions[state.index];
     if(!q){
-      // terminé => aller à l'étape Listening
-      window.location.href = '/listening';
+      // terminé => aller à la page de transition
+      window.location.href = '/reading-to-listening';
       return;
     }
     qEl.textContent = q.text;
@@ -133,6 +133,31 @@
   }
 
   function goNext(auto=false){
+    const q = questions[state.index];
+    if(!q){ return; }
+    const selected = formEl.querySelector('input[type=radio]:checked');
+    
+    // Check if question is answered
+    if(!selected && !auto){
+      // Show confirmation modal
+      showConfirmationModal(
+        'You have not answered this question. Do you want to skip it and move to the next question?',
+        function() {
+          // User confirmed - proceed to next question
+          proceedToNext();
+        },
+        function() {
+          // User cancelled - stay on current question
+          console.log('User chose to stay on current question');
+        }
+      );
+      return;
+    }
+    
+    proceedToNext();
+  }
+  
+  function proceedToNext(){
     const q = questions[state.index];
     if(!q){ return; }
     const selected = formEl.querySelector('input[type=radio]:checked');

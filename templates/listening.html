@@ -16,14 +16,36 @@
       </div>
     </div>
     <div id="question-card" class="card fade-in">
-      <h3 id="question-text">Listening question</h3>
-      <div id="audio-controls">
-        <button id="play-audio" class="btn secondary">🔊 Play Audio</button>
-        <div id="speech-status">Click Play to listen</div>
+      <div class="listening-section-header">
+        <h3 id="section-title">Section 1 - A1 Level</h3>
+        
+        <div id="audio-controls">
+          <button id="play-audio" class="btn secondary">🔊 Play Audio</button>
+          <div id="speech-status">Click Play to listen</div>
+        </div>
+        
+        <div class="audio-settings">
+          <div class="setting-group">
+            <label for="voice-select">🎤 Voice:</label>
+            <select id="voice-select" class="voice-select">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+          
+          <div class="setting-group">
+            <label for="speed-control">⚡ Speed:</label>
+            <input type="range" id="speed-control" min="0.5" max="2" step="0.1" value="0.85" class="speed-slider">
+            <span id="speed-value" class="speed-value">0.85x</span>
+          </div>
+        </div>
       </div>
-      <form id="options-form" class="options"></form>
+      
+      <div id="questions-group" class="questions-group">
+        <!-- Questions will be inserted here -->
+      </div>
+      
       <div class="actions">
-        <button id="next-btn" class="btn primary">Next</button>
+        <button id="next-btn" class="btn primary">Next Section</button>
       </div>
     </div>
   </div>
@@ -31,6 +53,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/confirmation-modal.js') }}"></script>
 <script src="{{ url_for('static', filename='js/questions.js') }}"></script>
-<script src="{{ url_for('static', filename='js/listening.js') }}"></script>
+<script src="{{ url_for('static', filename='js/listening_new.js') }}"></script>
 {% endblock %}

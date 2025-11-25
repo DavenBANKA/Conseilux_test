@@ -16,6 +16,14 @@ def test():
 def results():
     return render_template('results.html')
 
+@app.route('/certificate')
+def certificate():
+    return render_template('certificate.html')
+
+@app.route('/reading-to-listening')
+def reading_to_listening():
+    return render_template('reading_to_listening.html')
+
 @app.route('/listening')
 def listening():
     return render_template('listening.html')

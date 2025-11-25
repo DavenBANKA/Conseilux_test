@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Transition - Reading to Listening</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0e27;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, .15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, .15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(241, 196, 15, .1) 0%, transparent 40%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .8; transform: scale(1.05); }
+    }
+
+    /* Floating Orbs */
+    .bg-orbs {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .4;
+      animation: floatOrb 20s ease-in-out infinite;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-50px, 50px) scale(1.1); }
+      66% { transform: translate(50px, -30px) scale(0.9); }
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(102, 126, 234, .3), transparent 70%);
+      top: -10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(118, 75, 162, .3), transparent 70%);
+      bottom: -10%;
+      right: -10%;
+      animation-delay: 5s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(241, 196, 15, .2), transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 10s;
+    }
+
+    .transition-card {
+      max-width: 1000px;
+      width: 100%;
+      padding: 60px;
+      text-align: center;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .98));
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, .4),
+        0 0 0 1px rgba(255, 255, 255, .1) inset,
+        0 0 100px rgba(102, 126, 234, .2);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      animation: cardFadeIn 0.8s ease-out;
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .transition-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f1c40f);
+      border-radius: 32px;
+      z-index: -1;
+      opacity: .3;
+      filter: blur(20px);
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: .3; }
+      50% { opacity: .6; }
+    }
+
+    /* Success Animation */
+    .success-icon {
+      font-size: 100px;
+      display: inline-block;
+      animation: bounceIn 0.8s ease-out;
+      filter: drop-shadow(0 10px 30px rgba(102, 126, 234, .4));
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-icon::after {
+      content: '✅';
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 100px;
+      opacity: .3;
+      filter: blur(20px);
+      animation: iconGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes iconGlow {
+      0%, 100% { opacity: .3; transform: scale(1); }
+      50% { opacity: .6; transform: scale(1.1); }
+    }
+
+    .transition-title {
+      font-size: 52px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f1c40f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 16px;
+      letter-spacing: -1px;
+      animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+
+    .transition-subtitle {
+      font-size: 20px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0 0 50px;
+      font-weight: 600;
+      animation: fadeInUp 0.6s ease-out 0.4s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Countdown Section */
+    .countdown-section {
+      margin: 50px 0;
+      padding: 40px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, .3)),
+        linear-gradient(135deg, rgba(102, 126, 234, .08), rgba(118, 75, 162, .08));
+      border-radius: 24px;
+      position: relative;
+      animation: fadeInUp 0.6s ease-out 0.5s both;
+      box-shadow:
+        0 20px 60px rgba(102, 126, 234, .15),
+        0 0 0 1px rgba(255, 255, 255, .5) inset;
+      backdrop-filter: blur(20px);
+    }
+
+    .countdown-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 24px;
+      z-index: -1;
+      opacity: .3;
+    }
+
+    .countdown-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .countdown-icon {
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(102, 126, 234, .6));
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .countdown-message p {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0b2545;
+      margin: 0;
+    }
+
+    .countdown-circle {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 24px auto;
+    }
+
+    .countdown-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .countdown-bg {
+      fill: none;
+      stroke: rgba(102, 126, 234, .2);
+      stroke-width: 10;
+    }
+
+    .countdown-progress {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+      filter: drop-shadow(0 0 10px rgba(102, 126, 234, .6));
+    }
+
+    .countdown-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 56px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: scaleNumber 1s ease-in-out infinite;
+      filter: drop-shadow(0 4px 12px rgba(102, 126, 234, .4));
+    }
+
+    @keyframes scaleNumber {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .countdown-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(102, 126, 234, .2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 24px 0 16px;
+    }
+
+    .countdown-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 4px;
+      transition: width 1s linear;
+      box-shadow: 0 0 10px rgba(102, 126, 234, .5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .countdown-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
+      animation: barShine 2s ease-in-out infinite;
+    }
+
+    @keyframes barShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .countdown-text {
+      font-size: 16px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    .countdown-text span {
+      font-weight: 700;
+      color: #0b2545;
+    }
+
+    /* Instructions */
+    .instructions-box {
+      margin: 40px 0;
+      animation: fadeInUp 0.6s ease-out 0.6s both;
+    }
+
+    .instructions-box h2 {
+      font-size: 24px;
+      color: #0b2545;
+      margin: 0 0 24px;
+      font-weight: 700;
+    }
+
+    .instructions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .instruction-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .7));
+      padding: 28px;
+      border-radius: 20px;
+      border: 2px solid rgba(102, 126, 234, .15);
+      transition: all .4s cubic-bezier(.4, 0, .2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .instruction-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102, 126, 234, .1), transparent);
+      transition: left .6s ease;
+    }
+
+    .instruction-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(102, 126, 234, .4);
+      box-shadow:
+        0 20px 40px rgba(102, 126, 234, .25),
+        0 0 0 1px rgba(255, 255, 255, .8) inset;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, .9));
+    }
+
+    .instruction-card:hover::before {
+      left: 100%;
+    }
+
+    .instruction-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+      transition: all .4s cubic-bezier(.4, 0, .2, 1);
+      display: inline-block;
+    }
+
+    .instruction-card:hover .instruction-icon {
+      transform: scale(1.2) rotate(5deg);
+      filter: drop-shadow(0 4px 12px rgba(102, 126, 234, .4));
+    }
+
+    .instruction-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0b2545;
+      margin-bottom: 8px;
+    }
+
+    .instruction-text {
+      font-size: 14px;
+      color: #333;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* Audio Check */
+    .audio-check-box {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(241, 196, 15, .1), rgba(255, 215, 0, .1));
+      border: 2px solid rgba(241, 196, 15, .3);
+      border-radius: 16px;
+      margin: 32px 0;
+      animation: fadeInUp 0.6s ease-out 0.7s both;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .audio-check-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #f1c40f, #f39c12);
+      border-radius: 16px;
+      z-index: -1;
+      opacity: .2;
+      filter: blur(10px);
+    }
+
+    .audio-check-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 20px rgba(241, 196, 15, .6));
+    }
+
+    .audio-check-content {
+      flex: 1;
+      text-align: left;
+    }
+
+    .audio-check-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0b2545;
+      margin: 0 0 8px;
+    }
+
+    .audio-check-text {
+      font-size: 14px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0 0 12px;
+    }
+
+    .btn-test-audio {
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .4s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, .3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-test-audio::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .3);
+      transform: translate(-50%, -50%);
+      transition: width .6s ease, height .6s ease;
+    }
+
+    .btn-test-audio:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 36px rgba(102, 126, 234, .5);
+    }
+
+    .btn-test-audio:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-test-audio:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .btn-test-audio:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.6s ease-out 0.8s both;
+    }
+
+    .btn {
+      padding: 18px 40px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.4s cubic-bezier(.4, 0, .2, 1);
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f1c40f, #f39c12);
+      color: #0b2545;
+      box-shadow:
+        0 10px 40px rgba(241, 196, 15, .4),
+        0 0 0 1px rgba(255, 255, 255, .1) inset;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .2);
+      transform: translate(-50%, -50%);
+      transition: width .6s ease, height .6s ease;
+    }
+
+    .btn-primary:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow:
+        0 20px 60px rgba(241, 196, 15, .6),
+        0 0 0 1px rgba(255, 255, 255, .2) inset;
+    }
+
+    .btn-primary:active {
+      transform: translateY(-2px) scale(1);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #0b2545;
+      border: 2px solid #0b2545;
+    }
+
+    .btn-secondary:hover {
+      background: #0b2545;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .btn-icon {
+      font-size: 24px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .transition-card {
+        padding: 40px 24px;
+        border-radius: 24px;
+      }
+
+      .transition-title {
+        font-size: 36px;
+      }
+
+      .success-icon {
+        font-size: 80px;
+      }
+
+      .instructions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .audio-check-box {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .audio-check-content {
+        text-align: center;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .orb {
+        filter: blur(60px);
+      }
+
+      .orb-1 {
+        width: 300px;
+        height: 300px;
+      }
+
+      .orb-2 {
+        width: 250px;
+        height: 250px;
+      }
+
+      .orb-3 {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating Background Orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="transition-card">
+    <!-- Success Animation -->
+    <div class="success-icon">✅</div>
+
+    <!-- Main Message -->
+    <h1 class="transition-title">Excellent Work!</h1>
+    <p class="transition-subtitle">You've completed the Reading section successfully</p>
+
+    <!-- Countdown Section -->
+    <div id="countdown-section" class="countdown-section">
+      <div class="countdown-message">
+        <span class="countdown-icon">🎧</span>
+        <p>Get ready for the Listening Test</p>
+      </div>
+
+      <div class="countdown-circle">
+        <svg class="countdown-svg" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="countdown-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#f1c40f;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
+          <circle id="countdown-progress" class="countdown-progress" cx="50" cy="50" r="45" stroke="url(#countdown-gradient)"></circle>
+        </svg>
+        <div class="countdown-number" id="countdown-number">5</div>
+      </div>
+
+      <div class="countdown-bar-container">
+        <div id="countdown-bar" class="countdown-bar"></div>
+      </div>
+
+      <p class="countdown-text">Starting automatically in <span id="countdown-text">5</span> seconds...</p>
+    </div>
+
+    <!-- Instructions Box -->
+    <div class="instructions-box">
+      <h2>🎧 Listening Test Instructions</h2>
+
+      <div class="instructions-grid">
+        <div class="instruction-card">
+          <div class="instruction-icon">🔊</div>
+          <div class="instruction-title">Listen Carefully</div>
+          <div class="instruction-text">Click "Play Audio" to hear each section</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">🔢</div>
+          <div class="instruction-title">2 Plays Maximum</div>
+          <div class="instruction-text">Use your plays wisely for each section</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">⏱️</div>
+          <div class="instruction-title">10 Minutes Total</div>
+          <div class="instruction-text">Complete all 5 sections in time</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">📊</div>
+          <div class="instruction-title">5 CEFR Levels</div>
+          <div class="instruction-text">A1, A2, B1, B2, and C1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Check -->
+    <div class="audio-check-box">
+      <div class="audio-check-icon">🎵</div>
+      <div class="audio-check-content">
+        <p class="audio-check-title">Audio Check</p>
+        <p class="audio-check-text">Make sure your volume is on and you can hear clearly</p>
+        <button id="test-audio-btn" class="btn-test-audio">🔊 Test Audio</button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="button-group">
+      <button id="start-now-btn" class="btn btn-primary">
+        <span class="btn-icon">🚀</span>
+        <span>Start Listening Now</span>
+      </button>
+      <a href="#" class="btn btn-secondary">📊 View Reading Results</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let countdown = 5;
+      let countdownInterval = null;
+      let autoStartEnabled = true;
+
+      const countdownSection = document.getElementById('countdown-section');
+      const countdownNumber = document.getElementById('countdown-number');
+      const countdownText = document.getElementById('countdown-text');
+      const countdownBar = document.getElementById('countdown-bar');
+      const countdownProgress = document.getElementById('countdown-progress');
+      const startNowBtn = document.getElementById('start-now-btn');
+      const testAudioBtn = document.getElementById('test-audio-btn');
+
+      // Calculate circle progress
+      const radius = 45;
+      const circumference = 2 * Math.PI * radius;
+      countdownProgress.style.strokeDasharray = circumference;
+      countdownProgress.style.strokeDashoffset = circumference;
+
+      function updateCountdown() {
+        countdown--;
+
+        if (countdownNumber) countdownNumber.textContent = countdown;
+        if (countdownText) countdownText.textContent = countdown;
+
+        // Update progress bar
+        const barProgress = ((5 - countdown) / 5) * 100;
+        if (countdownBar) countdownBar.style.width = barProgress + '%';
+
+        // Update circle progress
+        const offset = circumference - (barProgress / 100) * circumference;
+        if (countdownProgress) countdownProgress.style.strokeDashoffset = offset;
+
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          if (autoStartEnabled) {
+            startListening();
+          }
+        }
+      }
+
+      function startCountdown() {
+        countdownInterval = setInterval(updateCountdown, 1000);
+      }
+
+      function stopCountdown() {
+        autoStartEnabled = false;
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+        }
+        if (countdownSection) {
+          countdownSection.style.opacity = '0.5';
+        }
+      }
+
+      function startListening() {
+        alert('🎉 Premium Transition Complete!\n\nIn your Flask app, this will redirect to /listening');
+      }
+
+      function testAudio() {
+        if (!('speechSynthesis' in window)) {
+          alert('Speech synthesis not supported in your browser');
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance('Hello! This is a premium audio test. Can you hear me clearly? The sound quality is excellent!');
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        if (testAudioBtn) {
+          testAudioBtn.textContent = '🔊 Playing...';
+          testAudioBtn.disabled = true;
+        }
+
+        utterance.onend = () => {
+          if (testAudioBtn) {
+            testAudioBtn.textContent = '🔊 Test Audio';
+            testAudioBtn.disabled = false;
+          }
+        };
+
+        utterance.onerror = () => {
+          if (testAudioBtn) {
+            testAudioBtn.textContent = '🔊 Test Audio';
+            testAudioBtn.disabled = false;
+          }
+          alert('Error playing audio. Please check your device settings.');
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      // Event listeners
+      if (startNowBtn) {
+        startNowBtn.addEventListener('click', function () {
+          stopCountdown();
+          startListening();
+        });
+      }
+
+      if (testAudioBtn) {
+        testAudioBtn.addEventListener('click', testAudio);
+      }
+
+      // Start countdown on page load
+      setTimeout(startCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>

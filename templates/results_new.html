@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block body_class %}results-page{% endblock %}
+
+{% block content %}
+<section class="results">
+  <div class="container">
+    <div class="results-card card">
+      <div class="results-header">
+        <h2>Test Completed!</h2>
+        <p class="results-subtitle">Congratulations, {{ current_user.full_name }}!</p>
+      </div>
+
+      <div class="results-stats">
+        <div class="result-stat">
+          <div class="stat-label">Your Score</div>
+          <div class="stat-value" id="score-value">0</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">CEFR Level</div>
+          <div class="stat-value" id="level-value">-</div>
+        </div>
+        <div class="result-stat">
+          <div class="stat-label">Percentage</div>
+          <div class="stat-value" id="percentage-value">0%</div>
+        </div>
+      </div>
+
+      <div class="level-description" id="level-description">
+        <h3 id="level-title">Your English Level</h3>
+        <p id="level-text"></p>
+      </div>
+
+      <div class="certificate-section">
+        <div class="certificate-icon">🎓</div>
+        <h3>Get Your Certificate</h3>
+        <p>Download your personalized certificate with your name</p>
+        
+        <button id="generate-cert-btn" class="btn btn-primary btn-large">
+          <span id="cert-btn-text">📄 Generate Certificate</span>
+          <span id="cert-btn-loading" style="display:none;">⏳ Generating...</span>
+        </button>
+        
+        <div id="cert-success" class="cert-success" style="display:none;">
+          <p>✅ Certificate generated successfully!</p>
+          <a id="download-cert-link" href="#" class="btn btn-secondary">
+            ⬇️ Download Certificate
+          </a>
+        </div>
+        
+        <div id="cert-error" class="cert-error" style="display:none;"></div>
+      </div>
+
+      <div class="result-actions">
+        <a href="/dashboard" class="btn secondary">Back to Dashboard</a>
+        <button onclick="window.print()" class="btn secondary">Print Results</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Calculate results from localStorage
+const readingAnswers = JSON.parse(localStorage.getItem('conseilux_test_state') || '{}').answers || {};
+const listeningAnswers = JSON.parse(localStorage.getItem('conseilux_listening_state_v2') || '{}').answers || {};
+
+// Get answer keys
+const READING_KEY = window.CONSEILUX?.ANSWER_KEY || [];
+
+const LISTENING_KEY = {
+  1: 'b', 2: 'c', 3: 'b', 4: 'b', 5: 'b',  // A1
+  6: 'a', 7: 'b', 8: 'b', 9: 'a', 10: 'a', // A2
+  11: 'b', 12: 'b', 13: 'b', 14: 'b', 15: 'a', 16: 'b', // B1
+  17: 'b', 18: 'b', 19: 'c', 20: 'b', 21: 'b', // B2
+  22: 'b', 23: 'b', 24: 'b', 25: 'b', 26: 'a'  // C1
+};
+
+// Calculate scores
+let readingScore = 0;
+for (let i = 1; i <= 90; i++) {
+  if (readingAnswers[i] && READING_KEY[i-1] && readingAnswers[i] === READING_KEY[i-1]) {
+    readingScore++;
+  }
+}
+
+let listeningScore = 0;
+for (let i = 1; i <= 26; i++) {
+  if (listeningAnswers[i] && LISTENING_KEY[i] && listeningAnswers[i] === LISTENING_KEY[i]) {
+    listeningScore++;
+  }
+}
+
+const totalScore = readingScore + listeningScore;
+const percentage = Math.round((totalScore / 116) * 100);
+
+// Determine CEFR level
+let level = 'A1';
+let levelDescription = '';
+
+if (totalScore >= 101) {
+  level = 'C2';
+  levelDescription = 'Proficiency - You can understand virtually everything and express yourself spontaneously with precision.';
+} else if (totalScore >= 81) {
+  level = 'C1';
+  levelDescription = 'Advanced - You can express yourself fluently and understand complex texts.';
+} else if (totalScore >= 61) {
+  level = 'B2';
+  levelDescription = 'Upper Intermediate - You can interact with native speakers with fluency and understand main ideas of complex texts.';
+} else if (totalScore >= 41) {
+  level = 'B1';
+  levelDescription = 'Intermediate - You can deal with most situations and understand main points of clear standard input.';
+} else if (totalScore >= 21) {
+  level = 'A2';
+  levelDescription = 'Elementary - You can understand frequently used expressions and communicate in simple tasks.';
+} else {
+  level = 'A1';
+  levelDescription = 'Beginner - You can understand and use familiar everyday expressions and basic phrases.';
+}
+
+// Display results
+document.getElementById('score-value').textContent = totalScore + '/116';
+document.getElementById('level-value').textContent = level;
+document.getElementById('percentage-value').textContent = percentage + '%';
+document.getElementById('level-title').textContent = `CEFR Level ${level}`;
+document.getElementById('level-text').textContent = levelDescription;
+
+// Generate certificate
+document.getElementById('generate-cert-btn').addEventListener('click', async function() {
+  const btnText = document.getElementById('cert-btn-text');
+  const btnLoading = document.getElementById('cert-btn-loading');
+  const certSuccess = document.getElementById('cert-success');
+  const certError = document.getElementById('cert-error');
+  const downloadLink = document.getElementById('download-cert-link');
+  
+  // Show loading
+  btnText.style.display = 'none';
+  btnLoading.style.display = 'inline';
+  this.disabled = true;
+  certSuccess.style.display = 'none';
+  certError.style.display = 'none';
+  
+  try {
+    const response = await fetch('/api/generate_certificate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        level: level,
+        score: totalScore
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Show success and download link
+      downloadLink.href = data.download_url;
+      certSuccess.style.display = 'block';
+      this.style.display = 'none';
+    } else {
+      certError.textContent = '❌ ' + (data.message || 'Failed to generate certificate');
+      certError.style.display = 'block';
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+      this.disabled = false;
+    }
+  } catch (error) {
+    certError.textContent = '❌ An error occurred. Please try again.';
+    certError.style.display = 'block';
+    btnText.style.display = 'inline';
+    btnLoading.style.display = 'none';
+    this.disabled = false;
+  }
+});
+</script>
+
+<style>
+.certificate-section {
+  margin: 40px 0;
+  padding: 32px;
+  background: linear-gradient(135deg, #fff9e6, #fffef8);
+  border: 2px solid #f1c40f;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.certificate-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.certificate-section h3 {
+  font-size: 22px;
+  color: #0b2545;
+  margin: 0 0 8px;
+}
+
+.certificate-section p {
+  font-size: 15px;
+  color: #6c757d;
+  margin: 0 0 24px;
+}
+
+.cert-success {
+  margin-top: 20px;
+  padding: 16px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+}
+
+.cert-success p {
+  color: #155724;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+.cert-error {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  color: #721c24;
+}
+
+.level-description {
+  margin: 32px 0;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #f1c40f;
+}
+
+.level-description h3 {
+  font-size: 20px;
+  color: #0b2545;
+  margin: 0 0 12px;
+}
+
+.level-description p {
+  font-size: 15px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.6;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/questions.js') }}"></script>
+{% endblock %}

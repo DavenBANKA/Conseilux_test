@@ -30,7 +30,10 @@
           <p class="site-subtitle">Training and Development</p>
         </div>
       </div>
-      <nav class="site-nav">
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+        <span id="menu-icon">☰</span>
+      </button>
+      <nav class="site-nav" id="site-nav">
         <a href="/" class="nav-link">Home</a>
         <a href="/register" class="nav-link nav-link-primary">Take the Test</a>
       </nav>
@@ -103,6 +106,36 @@
     </div>
   </footer>
 
+  <script>
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const siteNav = document.getElementById('site-nav');
+    const menuIcon = document.getElementById('menu-icon');
+    
+    if (mobileMenuToggle) {
+      mobileMenuToggle.addEventListener('click', function() {
+        siteNav.classList.toggle('active');
+        menuIcon.textContent = siteNav.classList.contains('active') ? '✕' : '☰';
+      });
+      
+      // Close menu when clicking on a link
+      const navLinks = siteNav.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          siteNav.classList.remove('active');
+          menuIcon.textContent = '☰';
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!siteNav.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+          siteNav.classList.remove('active');
+          menuIcon.textContent = '☰';
+        }
+      });
+    }
+  </script>
   {% block scripts %}{% endblock %}
 </body>
 

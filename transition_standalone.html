@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading to Listening Transition - Standalone</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .transition-card {
+      max-width: 900px;
+      width: 100%;
+      padding: 48px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Success Animation */
+    .success-animation {
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    .success-icon {
+      font-size: 80px;
+      display: inline-block;
+      animation: bounceIn 0.8s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-particles {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      pointer-events: none;
+    }
+
+    .success-particles span {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      animation: particleFloat 2s ease-out infinite;
+    }
+
+    .success-particles span:nth-child(1) { top: 0; left: 50%; animation-delay: 0s; }
+    .success-particles span:nth-child(2) { top: 25%; right: 0; animation-delay: 0.2s; }
+    .success-particles span:nth-child(3) { bottom: 0; left: 50%; animation-delay: 0.4s; }
+    .success-particles span:nth-child(4) { top: 25%; left: 0; animation-delay: 0.6s; }
+    .success-particles span:nth-child(5) { top: 50%; right: 10%; animation-delay: 0.8s; }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0); opacity: 0; }
+    }
+
+    .transition-title {
+      font-size: 42px;
+      font-weight: 700;
+      color: #0b2545;
+      margin: 0 0 12px;
+      animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+
+    .transition-subtitle {
+      font-size: 20px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0 0 40px;
+      animation: fadeInUp 0.6s ease-out 0.4s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Countdown Section */
+    .countdown-section {
+      margin: 40px 0;
+      padding: 32px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      border-radius: 20px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      animation: fadeInUp 0.6s ease-out 0.5s both;
+    }
+
+    .countdown-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .countdown-icon {
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .countdown-message p {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0b2545;
+      margin: 0;
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0;
+    }
+
+    .countdown-circle {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .countdown-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .countdown-bg {
+      fill: none;
+      stroke: rgba(102, 126, 234, 0.2);
+      stroke-width: 8;
+    }
+
+    .countdown-progress {
+      fill: none;
+      stroke: #667eea;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .countdown-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: 700;
+      color: #0b2545;
+      animation: scaleNumber 1s ease-in-out infinite;
+    }
+
+    @keyframes scaleNumber {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .countdown-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(102, 126, 234, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 24px 0 16px;
+    }
+
+    .countdown-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 4px;
+      transition: width 1s linear;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    }
+
+    .countdown-text {
+      font-size: 16px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    .countdown-text span {
+      font-weight: 700;
+      color: #0b2545;
+    }
+
+    /* Instructions */
+    .instructions-box {
+      margin: 40px 0;
+      animation: fadeInUp 0.6s ease-out 0.6s both;
+    }
+
+    .instructions-box h2 {
+      font-size: 24px;
+      color: #0b2545;
+      margin: 0 0 24px;
+      font-weight: 700;
+    }
+
+    .instructions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .instruction-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .instruction-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    }
+
+    .instruction-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .instruction-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0b2545;
+      margin-bottom: 8px;
+    }
+
+    .instruction-text {
+      font-size: 14px;
+      color: #333;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* Audio Check */
+    .audio-check-box {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(255, 215, 0, 0.1));
+      border: 2px solid rgba(241, 196, 15, 0.3);
+      border-radius: 16px;
+      margin: 32px 0;
+      animation: fadeInUp 0.6s ease-out 0.7s both;
+    }
+
+    .audio-check-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+    }
+
+    .audio-check-content {
+      flex: 1;
+      text-align: left;
+    }
+
+    .audio-check-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0b2545;
+      margin: 0 0 8px;
+    }
+
+    .audio-check-text {
+      font-size: 14px;
+      color: #333;
+      opacity: 0.8;
+      margin: 0 0 12px;
+    }
+
+    .btn-test-audio {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-test-audio:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-test-audio:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.6s ease-out 0.8s both;
+    }
+
+    .btn {
+      padding: 18px 40px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f1c40f, #f39c12);
+      color: #0b2545;
+      box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(241, 196, 15, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #0b2545;
+      border: 2px solid #0b2545;
+    }
+
+    .btn-secondary:hover {
+      background: #0b2545;
+      color: white;
+    }
+
+    .btn-icon {
+      font-size: 24px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .transition-card {
+        padding: 32px 20px;
+      }
+
+      .transition-title {
+        font-size: 28px;
+      }
+
+      .transition-subtitle {
+        font-size: 16px;
+      }
+
+      .countdown-section {
+        padding: 24px 16px;
+      }
+
+      .countdown-circle {
+        width: 100px;
+        height: 100px;
+      }
+
+      .countdown-number {
+        font-size: 40px;
+      }
+
+      .instructions-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .audio-check-box {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .audio-check-content {
+        text-align: center;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="transition-card">
+    <!-- Success Animation -->
+    <div class="success-animation">
+      <div class="success-icon">✅</div>
+      <div class="success-particles">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Main Message -->
+    <h1 class="transition-title">Excellent Work!</h1>
+    <p class="transition-subtitle">You've completed the Reading section successfully</p>
+
+    <!-- Countdown Section -->
+    <div id="countdown-section" class="countdown-section">
+      <div class="countdown-message">
+        <span class="countdown-icon">🎧</span>
+        <p>Get ready for the Listening Test</p>
+      </div>
+
+      <div class="countdown-timer">
+        <div class="countdown-circle">
+          <svg class="countdown-svg" viewBox="0 0 100 100">
+            <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
+            <circle id="countdown-progress" class="countdown-progress" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <div class="countdown-number" id="countdown-number">5</div>
+        </div>
+      </div>
+
+      <div class="countdown-bar-container">
+        <div id="countdown-bar" class="countdown-bar"></div>
+      </div>
+
+      <p class="countdown-text">Starting automatically in <span id="countdown-text">5</span> seconds...</p>
+    </div>
+
+    <!-- Instructions Box -->
+    <div class="instructions-box">
+      <h2>🎧 Listening Test Instructions</h2>
+
+      <div class="instructions-grid">
+        <div class="instruction-card">
+          <div class="instruction-icon">🔊</div>
+          <div class="instruction-title">Listen Carefully</div>
+          <div class="instruction-text">Click "Play Audio" to hear each section</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">🔢</div>
+          <div class="instruction-title">2 Plays Maximum</div>
+          <div class="instruction-text">Use your plays wisely for each section</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">⏱️</div>
+          <div class="instruction-title">10 Minutes Total</div>
+          <div class="instruction-text">Complete all 5 sections in time</div>
+        </div>
+
+        <div class="instruction-card">
+          <div class="instruction-icon">📊</div>
+          <div class="instruction-title">5 CEFR Levels</div>
+          <div class="instruction-text">A1, A2, B1, B2, and C1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Check -->
+    <div class="audio-check-box">
+      <div class="audio-check-icon">🎵</div>
+      <div class="audio-check-content">
+        <p class="audio-check-title">Audio Check</p>
+        <p class="audio-check-text">Make sure your volume is on and you can hear clearly</p>
+        <button id="test-audio-btn" class="btn-test-audio">🔊 Test Audio</button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="button-group">
+      <button id="start-now-btn" class="btn btn-primary">
+        <span class="btn-icon">🚀</span>
+        <span>Start Listening Now</span>
+      </button>
+      <a href="#" class="btn btn-secondary">📊 View Reading Results</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      let countdown = 5;
+      let countdownInterval = null;
+      let autoStartEnabled = true;
+
+      const countdownSection = document.getElementById('countdown-section');
+      const countdownNumber = document.getElementById('countdown-number');
+      const countdownText = document.getElementById('countdown-text');
+      const countdownBar = document.getElementById('countdown-bar');
+      const countdownProgress = document.getElementById('countdown-progress');
+      const startNowBtn = document.getElementById('start-now-btn');
+      const testAudioBtn = document.getElementById('test-audio-btn');
+
+      // Calculate circle progress
+      const radius = 45;
+      const circumference = 2 * Math.PI * radius;
+      countdownProgress.style.strokeDasharray = circumference;
+      countdownProgress.style.strokeDashoffset = circumference;
+
+      function updateCountdown() {
+        countdown--;
+
+        if (countdownNumber) countdownNumber.textContent = countdown;
+        if (countdownText) countdownText.textContent = countdown;
+
+        // Update progress bar
+        const barProgress = ((5 - countdown) / 5) * 100;
+        if (countdownBar) countdownBar.style.width = barProgress + '%';
+
+        // Update circle progress
+        const offset = circumference - (barProgress / 100) * circumference;
+        if (countdownProgress) countdownProgress.style.strokeDashoffset = offset;
+
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          if (autoStartEnabled) {
+            startListening();
+          }
+        }
+      }
+
+      function startCountdown() {
+        countdownInterval = setInterval(updateCountdown, 1000);
+      }
+
+      function stopCountdown() {
+        autoStartEnabled = false;
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+        }
+        if (countdownSection) {
+          countdownSection.style.opacity = '0.5';
+        }
+      }
+
+      function startListening() {
+        alert('Redirecting to Listening Test...\n\nIn your Flask app, this will redirect to /listening');
+        // In Flask: window.location.href = '/listening';
+      }
+
+      function testAudio() {
+        if (!('speechSynthesis' in window)) {
+          alert('Speech synthesis not supported in your browser');
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance('Hello! This is an audio test. Can you hear me clearly?');
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        if (testAudioBtn) {
+          testAudioBtn.textContent = '🔊 Playing...';
+          testAudioBtn.disabled = true;
+        }
+
+        utterance.onend = () => {
+          if (testAudioBtn) {
+            testAudioBtn.textContent = '🔊 Test Audio';
+            testAudioBtn.disabled = false;
+          }
+        };
+
+        utterance.onerror = () => {
+          if (testAudioBtn) {
+            testAudioBtn.textContent = '🔊 Test Audio';
+            testAudioBtn.disabled = false;
+          }
+          alert('Error playing audio. Please check your device settings.');
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      // Event listeners
+      if (startNowBtn) {
+        startNowBtn.addEventListener('click', function () {
+          stopCountdown();
+          startListening();
+        });
+      }
+
+      if (testAudioBtn) {
+        testAudioBtn.addEventListener('click', testAudio);
+      }
+
+      // Start countdown on page load
+      setTimeout(startCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>
