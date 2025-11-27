@@ -106,6 +106,7 @@
   </div>
 </section>
 
+<script src="{{ url_for('static', filename='js/questions.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 (function() {
@@ -116,27 +117,58 @@
   // Get test results from localStorage
   const readingAnswers = JSON.parse(localStorage.getItem('conseilux_test_state') || '{}').answers || {};
   const listeningAnswers = JSON.parse(localStorage.getItem('conseilux_listening_state_v2') || '{}').answers || {};
-  
-  // Calculate scores
-  const readingScore = Object.keys(readingAnswers).length;
-  const listeningScore = Object.keys(listeningAnswers).length;
+
+  // Keys
+  const READING_KEY = window.CONSEILUX && window.CONSEILUX.ANSWER_KEY ? window.CONSEILUX.ANSWER_KEY : [];
+  const LISTENING_KEY = {
+    1:'b',2:'c',3:'b',4:'b',5:'b',
+    6:'a',7:'b',8:'b',9:'a',10:'a',
+    11:'b',12:'b',13:'b',14:'b',15:'a',16:'b',
+    17:'b',18:'b',19:'c',20:'b',21:'b',
+    22:'b',23:'b',24:'b',25:'b',26:'a'
+  };
+
+  // Calculate scores (correct answers only)
+  let readingScore = 0;
+  for(let i=1;i<=READING_KEY.length;i++){
+    if(readingAnswers[i] && READING_KEY[i-1] && readingAnswers[i] === READING_KEY[i-1]){
+      readingScore++;
+    }
+  }
+  let listeningScore = 0;
+  for(let i=1;i<=26;i++){
+    const right = LISTENING_KEY[i];
+    if(listeningAnswers[i] && right && listeningAnswers[i] === right){
+      listeningScore++;
+    }
+  }
   const totalScore = readingScore + listeningScore;
-  
-  // Determine CEFR level based on total score
+
+  // CEFR mapping aligned with results.js (out of 116)
   function getCEFRLevel(score) {
-    if (score >= 100) return { level: 'C1', name: 'Advanced', color: '#9c27b0' };
-    if (score >= 80) return { level: 'B2', name: 'Upper Intermediate', color: '#2196f3' };
-    if (score >= 60) return { level: 'B1', name: 'Intermediate', color: '#00bcd4' };
-    if (score >= 40) return { level: 'A2', name: 'Elementary', color: '#4caf50' };
-    return { level: 'A1', name: 'Beginner', color: '#8bc34a' };
+    if (score >= 101) return { level: 'C2', name: 'Proficient', color: '#6a1b9a' };
+    if (score >= 81)  return { level: 'C1', name: 'Advanced', color: '#283593' };
+    if (score >= 61)  return { level: 'B2', name: 'Upper Intermediate', color: '#1565c0' };
+    if (score >= 41)  return { level: 'B1', name: 'Intermediate', color: '#00838f' };
+    if (score >= 21)  return { level: 'A2', name: 'Elementary', color: '#2e7d32' };
+    return { level: 'A1', name: 'Beginner', color: '#558b2f' };
   }
   
   const cefrLevel = getCEFRLevel(totalScore);
   
-  // Update certificate with student data
+  // Update certificate with student data (sanitize to prevent scores or artifacts)
+  function sanitizeName(text){
+    if(!text) return '';
+    return String(text)
+      .replace(/[^A-Za-zÀ-ÖØ-öø-ÿ'\-\s]/g, ' ')  // keep letters, spaces, apostrophes, hyphens
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
   if (studentData) {
-    const fullName = `${studentData.firstName} ${studentData.lastName}`;
-    document.getElementById('student-name').textContent = fullName;
+    const rawFirst = sanitizeName(studentData.firstName);
+    const rawLast = sanitizeName(studentData.lastName);
+    const fullName = [rawFirst, rawLast].filter(Boolean).join(' ').trim();
+    document.getElementById('student-name').textContent = fullName || 'Student Name';
   }
   
   // Update scores
@@ -144,9 +176,10 @@
   document.getElementById('listening-score').textContent = `${listeningScore}/26`;
   document.getElementById('total-score').textContent = `${totalScore}/116`;
   
-  // Update CEFR level
+  // Update CEFR level - show code only (A1/A2/B1/B2/C1/C2)
   document.getElementById('level-name').textContent = cefrLevel.level;
-  document.getElementById('level-description').textContent = cefrLevel.name;
+  const levelDescEl = document.getElementById('level-description');
+  if(levelDescEl){ levelDescEl.style.display = 'none'; }
   document.getElementById('level-badge').style.borderColor = cefrLevel.color;
   document.getElementById('level-name').style.color = cefrLevel.color;
   

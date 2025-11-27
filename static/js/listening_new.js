@@ -9,11 +9,9 @@
 
   const LS_LISTENING_KEY = 'conseilux_listening_state_v2';
   
-  // Always start fresh - clear any saved state from listening AND reading
+  // Start fresh ONLY for listening. Do not touch reading state/timer.
   localStorage.removeItem('conseilux_listening_state');
   localStorage.removeItem(LS_LISTENING_KEY);
-  localStorage.removeItem('conseilux_test_state'); // Clear reading test state
-  localStorage.removeItem('conseilux_test_start_ts'); // Clear reading test timer
 
   const progressEl = document.getElementById('progress');
   const perQTimerEl = document.getElementById('perq-timer');
@@ -97,7 +95,7 @@
     }
   ];
 
-  // Always start fresh - no saved state
+  // Start fresh listening state for this session
   let state = { sectionIndex: 0, answers: {}, playCount: {}, startTime: Date.now() };
   const TOTAL_TIME_LIMIT = 600; // 10 minutes total for entire listening test
   let timeRemaining = TOTAL_TIME_LIMIT;
@@ -105,7 +103,7 @@
   let totalSeconds = 0;
 
   function saveState(){ 
-    // No longer saving state - test always starts fresh
+    try { localStorage.setItem(LS_LISTENING_KEY, JSON.stringify(state)); } catch(e) {}
   }
 
   function speak(text, sectionIndex){
