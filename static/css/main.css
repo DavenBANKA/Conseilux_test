@@ -2478,6 +2478,28 @@ body.test-page .test{position:relative;z-index:1}
   aspect-ratio:1.414/1; /* A4 ratio */
 }
 
+/* Premium side accents (blue/orange) */
+.certificate-card::before,
+.certificate-card::after{
+  content:"";
+  position:absolute;
+  top:20px;
+  bottom:20px;
+  width:10px;
+  border-radius:6px;
+  z-index:0;
+}
+.certificate-card::before{
+  left:8px;
+  background:linear-gradient(180deg,#0b2545 0%, #f1c40f 100%);
+  box-shadow:0 0 0 3px rgba(11,37,69,.08);
+}
+.certificate-card::after{
+  right:8px;
+  background:linear-gradient(180deg,#f1c40f 0%, #0b2545 100%);
+  box-shadow:0 0 0 3px rgba(241,196,15,.08);
+}
+
 /* Decorative Border */
 .certificate-border{
   position:absolute;
@@ -2589,13 +2611,17 @@ body.test-page .test{position:relative;z-index:1}
   border-bottom:3px solid #f1c40f;
   display:inline-block;
   padding:0 40px 8px;
+  position:relative;
+  z-index:2; /* ensure name stays above decorative elements */
+  letter-spacing:0.5px;
+  line-height:1.1;
 }
 
 .certificate-text{
   font-size:16px;
   color:#6c757d;
   line-height:1.8;
-  margin:0 0 32px;
+  margin:8px 0 36px;
 }
 
 /* Level Badge */
@@ -2607,7 +2633,7 @@ body.test-page .test{position:relative;z-index:1}
   background:linear-gradient(145deg, #ffffff, #f8f9fa);
   border:3px solid #2196f3;
   border-radius:12px;
-  margin-bottom:32px;
+  margin:12px 0 32px;
   box-shadow:0 8px 24px rgba(0,0,0,.1);
 }
 

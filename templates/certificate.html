@@ -208,10 +208,12 @@
       // Show buttons again
       buttons.style.display = 'flex';
       
-      // Download
+      // Download (use sanitized names)
       const link = document.createElement('a');
-      const fileName = studentData 
-        ? `Conseilux_Certificate_${studentData.firstName}_${studentData.lastName}.png`
+      const sf = studentData ? sanitizeName(studentData.firstName) : '';
+      const sl = studentData ? sanitizeName(studentData.lastName) : '';
+      const fileName = (sf || sl)
+        ? `Conseilux_Certificate_${sf}_${sl}.png`
         : 'Conseilux_Certificate.png';
       link.download = fileName;
       link.href = canvas.toDataURL();
