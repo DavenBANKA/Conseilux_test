@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% block body_class %}certificate-page{% endblock %}
+{% block content %}
+<section class="certificate-section">
+  <div class="certificate-container">
+    
+    <!-- Certificate Card -->
+    <div id="certificate" class="certificate-card">
+      
+      <!-- Decorative Border -->
+      <div class="certificate-border">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+      </div>
+      
+      <!-- Header -->
+      <div class="certificate-header">
+        <div class="certificate-logo">
+          <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Conseilux Logo">
+        </div>
+        <h1 class="certificate-title">Certificate of Achievement</h1>
+        <p class="certificate-subtitle">English Proficiency Assessment</p>
+      </div>
+      
+      <!-- Body -->
+      <div class="certificate-body">
+        <p class="certificate-intro">This is to certify that</p>
+        
+        <h2 class="student-name" id="student-name">{{ user_name or 'Student Name' }}</h2>
+        
+        <p class="certificate-text">
+          has successfully completed the Conseilux English Proficiency Test
+          <br>and demonstrated competence at the following level:
+        </p>
+        
+        <div class="level-badge" id="level-badge">
+          <div class="level-icon">🏆</div>
+          <div class="level-info">
+            <div class="level-name" id="level-name">{{ level or 'B2' }}</div>
+            <div class="level-description" id="level-description">{{ level_description or 'Upper Intermediate' }}</div>
+          </div>
+        </div>
+        
+        <div class="score-details">
+          <div class="score-item">
+            <div class="score-label">Reading Score</div>
+            <div class="score-value" id="reading-score">{{ reading_score|default(0) }}/90</div>
+          </div>
+          <div class="score-divider"></div>
+          <div class="score-item">
+            <div class="score-label">Listening Score</div>
+            <div class="score-value" id="listening-score">{{ listening_score|default(0) }}/26</div>
+          </div>
+          <div class="score-divider"></div>
+          <div class="score-item">
+            <div class="score-label">Total Score</div>
+            <div class="score-value" id="total-score">{{ total_score|default(0) }}/116</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="certificate-footer">
+        <div class="certificate-date">
+          <div class="date-label">Date of Completion</div>
+          <div class="date-value" id="completion-date">{{ issue_date or 'January 1, 2025' }}</div>
+        </div>
+        
+        <div class="certificate-signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">Conseilux Training</div>
+          <div class="signature-title">Director of Assessment</div>
+        </div>
+        
+        <div class="certificate-id">
+          <div class="id-label">Certificate ID</div>
+          <div class="id-value" id="certificate-id">{{ certificate_id or 'CX-2025-XXXX' }}</div>
+        </div>
+      </div>
+      
+      <!-- Watermark -->
+      <div class="certificate-watermark">
+        <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Watermark">
+      </div>
+      
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="certificate-actions">
+      <button onclick="downloadCertificate()" class="btn btn-primary btn-large">
+        <span class="btn-icon">📥</span>
+        Download Certificate
+      </button>
+      <button onclick="printCertificate()" class="btn btn-secondary">
+        <span class="btn-icon">🖨️</span>
+        Print Certificate
+      </button>
+      <button onclick="shareOnLinkedIn()" class="btn btn-secondary">
+        <span class="btn-icon">in</span>
+        Share on LinkedIn
+      </button>
+      <a href="/" class="btn btn-outline">
+        <span class="btn-icon">🏠</span>
+        Back to Home
+      </a>
+    </div>
+    
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/questions.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function() {
+  // Données injectées côté serveur (pour la génération PDF ou préremplissage)
+  const serverData = {{ {
+    "user_name": user_name|default(''),
+    "level": level|default('A1'),
+    "level_description": level_description|default(''),
+    "reading_score": reading_score|default(0),
+    "listening_score": listening_score|default(0),
+    "total_score": total_score|default(0),
+    "certificate_id": certificate_id|default(''),
+    "issue_date": issue_date|default('')
+  }|tojson }};
+
+  // Get student data from sessionStorage
+  const studentDataStr = sessionStorage.getItem('studentData');
+  const studentData = studentDataStr ? JSON.parse(studentDataStr) : null;
+  
+  // Get test results from localStorage
+  const readingAnswers = JSON.parse(localStorage.getItem('conseilux_test_state') || '{}').answers || {};
+  const listeningAnswers = JSON.parse(localStorage.getItem('conseilux_listening_state_v2') || '{}').answers || {};
+
+  // Keys
+  const READING_KEY = window.CONSEILUX && window.CONSEILUX.ANSWER_KEY ? window.CONSEILUX.ANSWER_KEY : [];
+  const LISTENING_KEY = {
+    1:'b',2:'c',3:'b',4:'b',5:'b',
+    6:'a',7:'b',8:'b',9:'a',10:'a',
+    11:'b',12:'b',13:'b',14:'b',15:'a',16:'b',
+    17:'b',18:'b',19:'c',20:'b',21:'b',
+    22:'b',23:'b',24:'b',25:'b',26:'a'
+  };
+
+  // Calculate scores (correct answers only)
+  let readingScore = serverData.reading_score || 0;
+  if (READING_KEY.length) {
+    readingScore = 0;
+    for(let i=1;i<=READING_KEY.length;i++){
+      if(readingAnswers[i] && READING_KEY[i-1] && readingAnswers[i] === READING_KEY[i-1]){
+        readingScore++;
+      }
+    }
+  }
+  let listeningScore = serverData.listening_score || 0;
+  if (Object.keys(listeningAnswers).length) {
+    listeningScore = 0;
+    for(let i=1;i<=26;i++){
+      const right = LISTENING_KEY[i];
+      if(listeningAnswers[i] && right && listeningAnswers[i] === right){
+        listeningScore++;
+      }
+    }
+  }
+
+  // CEFR mapping aligned with results.js (out of 116)
+  function getCEFRLevel(score) {
+    // même orange pur pour tous les niveaux, seul le code change (A1, A2, ...)
+    const orange = '#ff7f00';
+    if (score >= 101) return { level: 'C2', name: 'Proficient', color: orange };
+    if (score >= 81)  return { level: 'C1', name: 'Advanced', color: orange };
+    if (score >= 61)  return { level: 'B2', name: 'Upper Intermediate', color: orange };
+    if (score >= 41)  return { level: 'B1', name: 'Intermediate', color: orange };
+    if (score >= 21)  return { level: 'A2', name: 'Elementary', color: orange };
+    return { level: 'A1', name: 'Beginner', color: orange };
+  }
+  
+  // Determine level dynamically from available scores (local first, then server)
+  const hasLocalReading = READING_KEY.length && Object.keys(readingAnswers).length > 0;
+  const hasLocalListening = Object.keys(listeningAnswers).length > 0;
+  const hasLocalScores = hasLocalReading || hasLocalListening;
+  const totalScore = hasLocalScores
+    ? (readingScore + listeningScore)
+    : (serverData.total_score || (readingScore + listeningScore));
+  const levelData = getCEFRLevel(totalScore || 0);
+  const levelCode = levelData.level;
+  
+  // Update certificate with student data (sanitize to prevent scores or artifacts)
+  function sanitizeName(text){
+    if(!text) return '';
+    return String(text)
+      .replace(/[^A-Za-zÀ-ÖØ-öø-ÿ'\-\s]/g, ' ')  // keep letters, spaces, apostrophes, hyphens
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  if (studentData) {
+    const rawFirst = sanitizeName(studentData.firstName);
+    const rawLast = sanitizeName(studentData.lastName);
+    const fullName = [rawFirst, rawLast].filter(Boolean).join(' ').trim();
+    document.getElementById('student-name').textContent = fullName || (serverData.user_name || 'Student Name');
+  } else if (serverData.user_name) {
+    document.getElementById('student-name').textContent = serverData.user_name;
+  }
+  
+  // Update scores
+  const finalReading = readingScore;
+  const finalListening = listeningScore;
+  const finalTotal = totalScore;
+  document.getElementById('reading-score').textContent = `${finalReading}/90`;
+  document.getElementById('listening-score').textContent = `${finalListening}/26`;
+  document.getElementById('total-score').textContent = `${finalTotal}/116`;
+  
+  // Update CEFR level - show code only (A1/A2/B1/B2/C1/C2)
+  document.getElementById('level-name').textContent = levelCode;
+  const levelDescEl = document.getElementById('level-description');
+  if(levelDescEl){ levelDescEl.style.display = 'none'; }
+  document.getElementById('level-badge').style.borderColor = '#ff7f00'; // cadre orange pur
+  document.getElementById('level-name').style.color = levelData.color;
+  
+  // Update date
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('completion-date').textContent = serverData.issue_date || today.toLocaleDateString('en-US', options);
+  
+  // Generate certificate ID
+  const certId = serverData.certificate_id || `CX-${today.getFullYear()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+  document.getElementById('certificate-id').textContent = certId;
+  
+  // Download certificate as image (PNG)
+  window.downloadCertificate = function() {
+    const certificate = document.getElementById('certificate');
+    const buttons = document.querySelector('.certificate-actions');
+    
+    // Hide buttons temporarily
+    if (buttons) buttons.style.display = 'none';
+    
+    html2canvas(certificate, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      logging: false
+    }).then(canvas => {
+      // Show buttons again
+      if (buttons) buttons.style.display = 'flex';
+      
+      const sf = studentData ? sanitizeName(studentData.firstName) : sanitizeName(serverData.user_name);
+      const sl = studentData ? sanitizeName(studentData.lastName) : '';
+      const baseName = (sf || sl)
+        ? `Conseilux_Certificate_${sf}_${sl}`.replace(/_+$/,'')
+        : 'Conseilux_Certificate';
+      const imgData = canvas.toDataURL('image/png');
+
+      // Generate PDF with jsPDF from the captured image
+      const jsPdfNamespace = window.jspdf || window.jsPDF;
+      const jsPDF = jsPdfNamespace && jsPdfNamespace.jsPDF ? jsPdfNamespace.jsPDF : jsPdfNamespace;
+
+      if (!jsPDF) {
+        // Fallback to PNG download if jsPDF is not available for some reason
+        const link = document.createElement('a');
+        link.download = `${baseName}.png`;
+        link.href = imgData;
+        link.click();
+        return;
+      }
+
+      const pdf = new jsPDF('landscape', 'pt', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const ratio = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
+      const imgWidth = canvas.width * ratio;
+      const imgHeight = canvas.height * ratio;
+      const x = (pageWidth - imgWidth) / 2;
+      const y = (pageHeight - imgHeight) / 2;
+
+      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+      pdf.save(`${baseName}.pdf`);
+    });
+  };
+  
+  // Share certificate on LinkedIn (opens LinkedIn share dialog)
+  window.shareOnLinkedIn = function() {
+    const nameText = (document.getElementById('student-name')?.textContent || '').trim();
+    const shareUrl = new URL('/public_certificate', window.location.origin);
+    shareUrl.searchParams.set('certificate_id', certId);
+    shareUrl.searchParams.set('user_name', nameText || 'Student Name');
+    shareUrl.searchParams.set('level', levelCode);
+    shareUrl.searchParams.set('total_score', String(finalTotal));
+
+    const linkedInUrl =
+      `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl.toString())}`;
+
+    window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
+  };
+  
+  // Print certificate
+  window.printCertificate = function() {
+    window.print();
+  };
+})();
+</script>
+{% endblock %}

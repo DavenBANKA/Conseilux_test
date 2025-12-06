@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block body_class %}certificate-page{% endblock %}
+
+{% block head_meta %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Conseilux English Certificate - {{ user_name }}">
+  <meta property="og:description" content="{{ user_name }} achieved level {{ level }} ({{ total_score }}/116) on the Conseilux English Proficiency Test.">
+  <meta property="og:image" content="{{ og_image_url }}">
+  <meta property="og:url" content="{{ og_url }}">
+  <meta property="og:site_name" content="Conseilux Training and Development">
+  <meta property="og:locale" content="en_US">
+{% endblock %}
+
+{% block content %}
+<section class="certificate-section">
+  <div class="certificate-container">
+    <div class="certificate-card">
+      <div class="certificate-border">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+      </div>
+
+      <div class="certificate-header">
+        <div class="certificate-logo">
+          <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Conseilux Logo">
+        </div>
+        <h1 class="certificate-title">Certificate of Achievement</h1>
+        <p class="certificate-subtitle">English Proficiency Assessment</p>
+      </div>
+
+      <div class="certificate-body">
+        <p class="certificate-intro">This is to certify that</p>
+        <h2 class="student-name">{{ user_name }}</h2>
+        <p class="certificate-text">
+          has successfully completed the Conseilux English Proficiency Test
+          <br>and demonstrated competence at the following level:
+        </p>
+
+        <div class="level-badge">
+          <div class="level-icon">🏆</div>
+          <div class="level-info">
+            <div class="level-name">{{ level }}</div>
+            <div class="level-description">Official CEFR Level</div>
+          </div>
+        </div>
+
+        <div class="score-details">
+          <div class="score-item">
+            <div class="score-label">Total Score</div>
+            <div class="score-value">{{ total_score }}/116</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="certificate-footer">
+        <div class="certificate-date">
+          <div class="date-label">Date of Completion</div>
+          <div class="date-value">{{ issue_date }}</div>
+        </div>
+        <div class="certificate-signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">Conseilux Training</div>
+          <div class="signature-title">Director of Assessment</div>
+        </div>
+        <div class="certificate-id">
+          <div class="id-label">Certificate ID</div>
+          <div class="id-value">{{ certificate_id }}</div>
+        </div>
+      </div>
+
+      <div class="certificate-watermark">
+        <img src="{{ url_for('images', filename='logo conseilux english.png') }}" alt="Watermark">
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -147,7 +147,9 @@ document.getElementById('generate-cert-btn').addEventListener('click', async fun
       },
       body: JSON.stringify({
         level: level,
-        score: totalScore
+        score: totalScore,
+        reading_score: readingScore,
+        listening_score: listeningScore
       })
     });
     

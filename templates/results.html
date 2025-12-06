@@ -30,9 +30,27 @@
           <div id="time-line" class="stat-value">00:00:00</div>
         </div>
       </div>
-      <div class="result-actions">
-        <a class="btn primary" href="{{ url_for('certificate') }}" id="certificate-btn">📜 Get Your Certificate</a>
-        <a class="btn secondary" href="{{ url_for('register') }}" id="restart-btn">Retake the Test</a>
+      <!-- Certificate Section - Highlighted -->
+      <div class="certificate-highlight">
+        <div class="certificate-highlight-main">
+          <div class="certificate-icon-large">🏆</div>
+          <div class="certificate-highlight-text">
+            <h3>Obtenez votre Certificat Premium</h3>
+            <p>
+              Recevez un certificat professionnel avec votre nom, votre niveau CEFR
+              et un design premium prêt à être téléchargé et partagé.
+            </p>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <a class="btn primary" href="{{ url_for('certificate') }}" id="certificate-view-btn">
+            👁️ Voir le Certificat
+          </a>
+          <a class="btn secondary" href="{{ url_for('register') }}" id="restart-btn">
+            🔄 Refaire le Test
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -42,4 +60,61 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/questions.js') }}"></script>
 <script src="{{ url_for('static', filename='js/results.js') }}"></script>
+<script src="{{ url_for('static', filename='js/certificate-download.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+<style>
+  /* Section certificat mise en évidence */
+  .certificate-highlight {
+    margin: 32px 0 24px;
+    padding: 28px 24px;
+    background: linear-gradient(135deg, rgba(255,127,0,0.06) 0%, #fffef8 100%);
+    border: 2px solid var(--yellow);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .certificate-highlight-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    text-align: left;
+    max-width: 640px;
+    margin: 0 auto 20px auto;
+  }
+
+  .certificate-icon-large {
+    font-size: 56px;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .certificate-highlight h3 {
+    font-size: 22px;
+    color: var(--blue);
+    margin: 0 0 8px 0;
+    font-weight: 700;
+  }
+
+  .certificate-highlight p {
+    font-size: 15px;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .result-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
 {% endblock %}

@@ -27,9 +27,10 @@
         <div class="hero-actions">
           <a class="btn primary hero-cta" href="{{ url_for('register') }}">Take the test now</a>
           <a class="btn secondary hero-cta-alt" href="#features">Learn More</a>
+          <a class="btn certificate-btn hero-certificate" href="{{ url_for('certificate') }}">🏆 Voir le Certificat</a>
         </div>
         <div class="hero-trust">
-          <p>✓ No registration required • ✓ Instant results</p>
+          <p>✓ No registration required • ✓ Instant results • ✓ Premium Certificate</p>
         </div>
       </div>
       <div class="hero-visual">
@@ -429,6 +430,45 @@
   </div>
 </section>
 
+<section class="certificate-preview-section">
+  <div class="container">
+    <div class="certificate-preview-content">
+      <div class="certificate-preview-icon">🏆</div>
+      <h2>Certificat Premium Professionnel</h2>
+      <p class="certificate-preview-subtitle">Obtenez votre certificat personnalisé après le test</p>
+      <p class="certificate-preview-description">
+        Découvrez à quoi ressemble votre futur certificat professionnel. Un document premium au format PDF 
+        avec votre nom, votre niveau CEFR, et un design élégant pour valoriser vos compétences en anglais.
+      </p>
+      <div class="certificate-preview-features">
+        <div class="certificate-feature-item">
+          <span class="feature-check">✓</span>
+          <span>Design Premium Professionnel</span>
+        </div>
+        <div class="certificate-feature-item">
+          <span class="feature-check">✓</span>
+          <span>Format PDF Téléchargeable</span>
+        </div>
+        <div class="certificate-feature-item">
+          <span class="feature-check">✓</span>
+          <span>Personnalisé avec votre Nom</span>
+        </div>
+        <div class="certificate-feature-item">
+          <span class="feature-check">✓</span>
+          <span>Niveau CEFR Certifié</span>
+        </div>
+      </div>
+      <div class="certificate-preview-actions">
+        <a class="btn certificate-preview-btn" href="{{ url_for('certificate') }}">
+          <span class="btn-icon-large">📜</span>
+          <span class="btn-text">Voir le Certificat Maintenant</span>
+        </a>
+        <p class="certificate-preview-note">Aperçu du certificat • Disponible après le test</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="cta-section">
   <div class="container">
     <div class="cta-content">
@@ -444,4 +484,173 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block styles %}
+<style>
+  /* Bouton certificat dans hero */
+  .btn.certificate-btn {
+    background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%);
+    color: #0b2545;
+    border: none;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(241, 196, 15, 0.4);
+  }
+
+  .btn.certificate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(241, 196, 15, 0.6);
+    background: linear-gradient(135deg, #ffd700 0%, #f1c40f 100%);
+  }
+
+  /* Section preview certificat */
+  .certificate-preview-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #fff9e6 0%, #fffef8 100%);
+    margin: 40px 0;
+    border-top: 3px solid #f1c40f;
+    border-bottom: 3px solid #f1c40f;
+  }
+
+  .certificate-preview-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .certificate-preview-icon {
+    font-size: 72px;
+    margin-bottom: 24px;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .certificate-preview-content h2 {
+    font-size: 36px;
+    color: #0b2545;
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .certificate-preview-subtitle {
+    font-size: 20px;
+    color: #424242;
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+
+  .certificate-preview-description {
+    font-size: 17px;
+    color: #424242;
+    line-height: 1.7;
+    margin: 0 0 32px;
+    opacity: 0.9;
+  }
+
+  .certificate-preview-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+  }
+
+  .certificate-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: #0b2545;
+    font-weight: 500;
+  }
+
+  .feature-check {
+    color: #2ecc71;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .certificate-preview-actions {
+    margin-top: 40px;
+  }
+
+  .btn.certificate-preview-btn {
+    background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%);
+    color: #0b2545;
+    border: none;
+    padding: 18px 40px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(241, 196, 15, 0.5);
+    margin-bottom: 16px;
+  }
+
+  .btn.certificate-preview-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(241, 196, 15, 0.7);
+    background: linear-gradient(135deg, #ffd700 0%, #f1c40f 100%);
+  }
+
+  .btn-icon-large {
+    font-size: 28px;
+  }
+
+  .certificate-preview-note {
+    font-size: 14px;
+    color: #757575;
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-actions {
+      flex-direction: column;
+    }
+
+    .btn.certificate-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .certificate-preview-content h2 {
+      font-size: 28px;
+    }
+
+    .certificate-preview-subtitle {
+      font-size: 18px;
+    }
+
+    .certificate-preview-features {
+      grid-template-columns: 1fr;
+    }
+
+    .btn.certificate-preview-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 16px 32px;
+      font-size: 16px;
+    }
+  }
+</style>
 {% endblock %}

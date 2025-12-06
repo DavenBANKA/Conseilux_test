@@ -288,30 +288,105 @@ def certificate():
 @app.route('/api/generate_certificate', methods=['POST'])
 @login_required
 def generate_certificate():
-    """Generate personalized PDF certificate"""
-    from certificate_generator import generate_user_certificate
-    from flask import send_file
+    """Generate personalized PDF certificate with WeasyPrint (Premium)"""
+    from weasyprint_certificate_generator import PremiumCertificateGenerator
+    from weasyprint import HTML, CSS
+    from datetime import datetime
+    import os
     
     data = request.get_json()
     level = data.get('level', 'A1')
-    score = data.get('score', 0)
+    total_score = data.get('score', 0)
+    reading_score = data.get('reading_score', 0)
+    listening_score = data.get('listening_score', 0)
     
     try:
-        # Generate certificate with user's full name
-        cert_path = generate_user_certificate(
-            user_name=current_user.full_name,
-            level=level,
-            score=score,
-            user_id=current_user.id
+        # If individual scores not provided, estimate from total
+        if reading_score == 0 and listening_score == 0 and total_score > 0:
+            # Estimate: assume proportional split (90 reading, 26 listening)
+            reading_score = int((total_score * 90) / 116)
+            listening_score = total_score - reading_score
+        
+        # CEFR level descriptions
+        cefr_descriptions = {
+            'A1': 'Beginner',
+            'A2': 'Elementary',
+            'B1': 'Intermediate',
+            'B2': 'Upper Intermediate',
+            'C1': 'Advanced',
+            'C2': 'Proficient'
+        }
+        
+        # Generate certificate ID
+        timestamp = datetime.now().strftime('%Y%m%d')
+        random_part = abs(hash(f"{current_user.id}{timestamp}{level}")) % 10000
+        certificate_id = f"CX-{timestamp}-{random_part:04d}-{level}"
+        
+        # Logo path - convert to file:// URL for WeasyPrint
+        logo_path = os.path.join(app.root_path, 'images', 'logo conseilux english.png')
+        if os.path.exists(logo_path):
+            # Convert to file:// URL for WeasyPrint (Windows compatible)
+            if os.name == 'nt':  # Windows
+                logo_path = 'file:///' + logo_path.replace('\\', '/')
+            else:  # Unix/Mac
+                logo_path = 'file://' + logo_path
+        else:
+            logo_path = ''
+        
+        # Prepare context for template
+        context = {
+            'user_name': current_user.full_name,
+            'level': level,
+            'level_description': cefr_descriptions.get(level, ''),
+            'reading_score': reading_score,
+            'listening_score': listening_score,
+            'total_score': total_score,
+            'issue_date': datetime.now().strftime("%B %d, %Y"),
+            'certificate_id': certificate_id,
+            'logo_path': logo_path if logo_path else ''
+        }
+        
+        # Render template with Flask
+        html_content = render_template('certificate_premium.html', **context)
+        
+        # Create output directory
+        cert_dir = os.path.join('static', 'certificates')
+        os.makedirs(cert_dir, exist_ok=True)
+        
+        # Generate filename
+        timestamp_file = datetime.now().strftime('%Y%m%d_%H%M%S')
+        safe_name = "".join(c for c in current_user.full_name if c.isalnum() or c in (' ', '-', '_')).strip()
+        safe_name = safe_name.replace(' ', '_')
+        filename = f"certificate_premium_{safe_name}_{timestamp_file}.pdf"
+        output_path = os.path.join(cert_dir, filename)
+        
+        # Generate PDF with WeasyPrint
+        base_url = app.root_path
+        HTML(
+            string=html_content,
+            base_url=base_url
+        ).write_pdf(
+            output_path,
+            stylesheets=[
+                CSS(string='''
+                    @page {
+                        size: A4 landscape;
+                        margin: 0;
+                    }
+                ''')
+            ]
         )
         
         return jsonify({
             'success': True,
             'message': 'Certificate generated successfully',
-            'download_url': f'/download_certificate?path={cert_path}'
+            'download_url': f'/download_certificate?path={output_path}'
         })
     
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        app.logger.error(f"Certificate generation error: {error_details}")
         return jsonify({
             'success': False,
             'message': f'Error generating certificate: {str(e)}'

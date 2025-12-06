@@ -9,6 +9,7 @@
   <title>Conseilux Test - Professional English Assessment</title>
   <meta name="description"
     content="Free professional English test with instant CEFR level results. Assess your English proficiency in 15-30 minutes.">
+  {% block head_meta %}{% endblock %}
   <link rel="icon" type="image/png" href="/images/logo%20conseilux%20english.png" />
   <link rel="shortcut icon" type="image/png" href="/images/logo%20conseilux%20english.png" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
@@ -35,6 +36,7 @@
       </button>
       <nav class="site-nav" id="site-nav">
         <a href="/" class="nav-link">Home</a>
+        <a href="/certificate" class="nav-link">📜 Voir Certificat</a>
         <a href="/register" class="nav-link nav-link-primary">Take the Test</a>
       </nav>
     </div>
