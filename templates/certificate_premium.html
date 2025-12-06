@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% block body_class %}certificate-page{% endblock %}
+
+{% block head_meta %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Conseilux English Certificate - {{ user_name or 'Student Name' }}">
+  <meta property="og:description" content="{{ user_name or 'Student Name' }} - Level {{ level or 'B2' }} ({{ total_score|default(0) }}/116)">
+  <meta property="og:image" content="{{ og_image_url }}">
+  <meta property="og:url" content="{{ og_url }}">
+  <meta property="og:site_name" content="Conseilux English training">
+  <meta property="og:locale" content="en_US">
+{% endblock %}
 {% block content %}
 <section class="certificate-section">
   <div class="certificate-container">

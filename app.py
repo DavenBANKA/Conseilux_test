@@ -20,17 +20,38 @@ def results():
 
 @app.route('/certificate')
 def certificate():
-    """Afficher le nouveau certificat (version premium)"""
+    """Afficher le certificat premium (permet aussi le partage public)."""
+    user_name = request.args.get('user_name', 'Student Name')
+    level = request.args.get('level', 'B2')
+    level_description = request.args.get('level_description', 'Upper Intermediate')
+    certificate_id = request.args.get('certificate_id', 'CX-PREVIEW-0001')
+    issue_date = request.args.get('issue_date') or datetime.now().strftime("%B %d, %Y")
+
+    def parse_int(raw, default=0):
+        try:
+            return int(raw)
+        except (ValueError, TypeError):
+            return default
+
+    reading_score = parse_int(request.args.get('reading_score'), 0)
+    listening_score = parse_int(request.args.get('listening_score'), 0)
+    total_score = parse_int(request.args.get('total_score'), 0)
+
+    og_url = request.url
+    og_image_url = url_for('images', filename='logo conseilux english.png', _external=True)
+
     return render_template(
         'certificate_premium.html',
-        user_name='Student Name',
-        level='B2',
-        level_description='Upper Intermediate',
-        reading_score=0,
-        listening_score=0,
-        total_score=0,
-        issue_date=datetime.now().strftime("%B %d, %Y"),
-        certificate_id='CX-PREVIEW-0001'
+        user_name=user_name,
+        level=level,
+        level_description=level_description,
+        reading_score=reading_score,
+        listening_score=listening_score,
+        total_score=total_score,
+        issue_date=issue_date,
+        certificate_id=certificate_id,
+        og_url=og_url,
+        og_image_url=og_image_url
     )
 
 
