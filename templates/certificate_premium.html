@@ -283,11 +283,17 @@
   // Share certificate on LinkedIn (opens LinkedIn share dialog)
   window.shareOnLinkedIn = function() {
     const nameText = (document.getElementById('student-name')?.textContent || '').trim();
+    const dateText = (document.getElementById('completion-date')?.textContent || '').trim();
     const shareUrl = new URL('/public_certificate', window.location.origin);
     shareUrl.searchParams.set('certificate_id', certId);
     shareUrl.searchParams.set('user_name', nameText || 'Student Name');
     shareUrl.searchParams.set('level', levelCode);
     shareUrl.searchParams.set('total_score', String(finalTotal));
+    shareUrl.searchParams.set('reading_score', String(finalReading));
+    shareUrl.searchParams.set('listening_score', String(finalListening));
+    if (dateText) {
+      shareUrl.searchParams.set('issue_date', dateText);
+    }
 
     const linkedInUrl =
       `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl.toString())}`;

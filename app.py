@@ -40,10 +40,20 @@ def public_certificate():
     user_name = request.args.get('user_name', 'Student Name')
     level = request.args.get('level', 'A1')
     total_score_raw = request.args.get('total_score', '0')
+    reading_score_raw = request.args.get('reading_score', '0')
+    listening_score_raw = request.args.get('listening_score', '0')
     try:
         total_score = int(total_score_raw)
     except ValueError:
         total_score = 0
+    try:
+        reading_score = int(reading_score_raw)
+    except ValueError:
+        reading_score = 0
+    try:
+        listening_score = int(listening_score_raw)
+    except ValueError:
+        listening_score = 0
 
     certificate_id = request.args.get('certificate_id', 'CX-PUBLIC-0001')
     issue_date = request.args.get('issue_date') or datetime.now().strftime("%B %d, %Y")
@@ -56,6 +66,8 @@ def public_certificate():
         user_name=user_name,
         level=level,
         total_score=total_score,
+        reading_score=reading_score,
+        listening_score=listening_score,
         certificate_id=certificate_id,
         issue_date=issue_date,
         og_url=og_url,
