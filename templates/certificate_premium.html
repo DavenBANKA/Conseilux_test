@@ -284,7 +284,8 @@
   window.shareOnLinkedIn = function() {
     const nameText = (document.getElementById('student-name')?.textContent || '').trim();
     const dateText = (document.getElementById('completion-date')?.textContent || '').trim();
-    const shareUrl = new URL('/public_certificate', window.location.origin);
+    // Utiliser l'URL publique déployée (demandée) vers /certificate
+    const shareUrl = new URL('https://conseiluxenglish.onrender.com/certificate');
     shareUrl.searchParams.set('certificate_id', certId);
     shareUrl.searchParams.set('user_name', nameText || 'Student Name');
     shareUrl.searchParams.set('level', levelCode);
